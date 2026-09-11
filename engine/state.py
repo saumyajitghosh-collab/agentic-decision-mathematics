@@ -15,8 +15,7 @@ from . import config as cfg
 LOG_L1 = np.log(cfg.LIK)
 LOG_L0 = np.log(1.0 - cfg.LIK)
 
-
-def posterior(prior, obs, rel):
+def posterior(prior, obs, rel):
     """prior (N,K); obs (N,E) with 1 present, 0 absent, -1 unobserved; rel (N,E)."""
     o = obs[:, :, None]
     ll = np.where(o == 1, LOG_L1[None], np.where(o == 0, LOG_L0[None], 0.0))
