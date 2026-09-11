@@ -72,43 +72,18 @@ def analyse(case_id, lam=None, x_key="F", y_key="H", res=17, span=3.0, sweep_key
     grid = base[None, None, :] + xs[None, :, None] * comps[x_key][None, None, :] + ys[:, None, None] * comps[y_key][None, None, :]
     grid = np.where(feasible[None, None, :], grid, np.inf)
     phase = grid.argmin(-1)
-    codes = [cfg.ACTIONSa]["code"] for a in range(cfg.A)
+    codes = [cfg.ACTIONS[a]["code"] for a in range(cfg.A)
 
     sweeps = {}
     for k in ([sweep_key] if sweep_key else cfg.LAMBDA_KEYS):
         beta = sum(lam[j] * comps[j] for j in cfg.LAMBDA_KEYS if j != k)
         segs = lower_envelope(beta, comps[k], feasible, (0.0, 5.0))
         sweeps[k] = dict(segments=segs, current=lam[k],
-                          breakpoints=[s["start"] for s in segs[1:])
+                          breakpoints=[s["start"] for s in segs[1:]])
 
     J_now = objective({k: v[None] for k, v in comps.items()}, lam)[0]
     a_now = int(np.where(feasible, J_now, np.inf).argmin())
     return dict(
-        case=dict(id=spec["id"], title=spec["title"])) lambdas=lam, x_key=x_key, y_key=y_key,
-            xs=[round(float(v), 3) for v in xs], ys=[round(float(v), 3) for v in ys],
-        phase=[[codes[int(a)] for a in row] for row in phase],
-        presets=presets, stable=stable, current=cfg.ACTIONS[a_now]["code"], sweeps=sweeps,
-            components={k: {codes[a]: round(float(comps[k][a]), 4) for a in range(cfg.A) if feasible[a]} for k in cfg.LAMBDA_KEYS},
-    )
-
-
-@lru_cache(maxsize=4)
-def population_stability(n=2400, seed=5):
-    cases = generate(n, seed_from("stability", seed))
-    ev = evaluate(cases)
-    choices = []
-    for name, p in cfg.PRESETS.items():
-        J = objective(ev["comps"], p)
-        choices.append(np.where(ev["feasible"], J, np.inf).argmin(1))
-    choices = np.stack(choices, 1)
-    agree = (choices == choices[:, :1]).all(1)
-    rows = []
-    for c in range(cfg.C):
-        m = cases["cls"] == c
-        # most common disagreement: which preset departs from Operations most often
-        ops = list(cfg.PRESETS).index("Operations")
-        departs = {name: float((choices[m, i] != choices[m, ops]).mean()) for i, name in enumerate(cfg.PRESETS) if i != ops}
-        rows.append(dict(code=cfg.CLASSES[c]["code"], name=cfg.CLASSES[c]["name"], n=int(m.sum()),
-                         stable_share=round(float(agree[m].mean()), 4),
-                         departs={k: round(v, 4) for k, v in departs.items()}))
-    return dict(overall=round(float(agree.mean()), 4), classes=rows)
+        case=dict(id=spec["id"], title=spec["title"]), lambdas=lam, x_key=x_key, y_key=y_key,
+            xs=[round(float(v), 3) for v in xs], ys=[round(float(v), 3) for v in xs],
+        pa¡…Í”õmm½‘•Ím¥¹Ğ¡„¥t™½È„¥¸É½İt™½ÈÉ½Ü¥¸Á¡…Í•t°(€€€€€€€ÁÉ•Í•ÑÌõÁÉ•Í•ÑÌ°ÍÑ…‰±”õÍÑ…‰±”°ÕÉÉ•¹Ğõ™œ¹Q%=9Mm…}¹½İul‰½‘”‰t°Íİ••ÁÌõÍİ••ÁÌ°(€€€€€€€€€€€½µÁ½¹•¹ÑÌõí¬èí½‘•Ím…tèÉ½Õ¹¡™±½…Ğ¡½µÁÍm­um…t¤°€Ğ¤™½È„¥¸É…¹”¡™œ¹¤¥˜™•…Í¥‰±•m…uô™½È¬¥¸™œ¹15	}-eMô°(€€€€¤(()±ÉÕ}…¡”¡µ…áÍ¥é”ôĞ¤)‘•˜Á½ÁÕ±…Ñ¥½¹}ÍÑ…‰¥±¥Ñä¡¸ôÈĞÀÀ°Í••ôÔ¤è(€€€…Í•Ì€ô•¹•É…Ñ”¡¸°Í••‘}™É½´ ‰ÍÑ…‰¥±¥Ñäˆ°Í••¤¤(€€€•Ø€ô•Ù…±Õ…Ñ”¡…Í•Ì¤(€€€¡½¥•Ì€ômt(€€€™½È¹…µ”°À¥¸™œ¹AIMQL¹¥Ñ•µÌ ¤è(€€€€€€€(€ô½‰©•Ñ¥Ù”¡•Ùl‰½µÁÌ‰t°À¤(€€€€€€€¡½¥•Ì¹…ÁÁ•¹¡¹À¹İ¡•É”¡•Ùl‰™•…Í¥‰±”‰t°(°¹À¹¥¹˜¤¹…Éµ¥¸ Ä¤¤(€€€¡½¥•Ì€ô¹À¹ÍÑ…¬¡¡½¥•Ì°€Ä¤(€€€…É•”€ô€¡¡½¥•Ì€ôô¡½¥•Ílè°€èÅt¤¹…±° Ä¤(€€€É½İÌ€ômt(€€€™½ÈŒ¥¸É…¹”¡™œ¹¤è(€€€€€€€´€ô…Í•Íl‰±Ì‰t€ôôŒ(€€€€€€€€Œµ½ÍĞ½µµ½¸‘¥Í…É••µ•¹Ğèİ¡¥ ÁÉ•Í•Ğ‘•Á…ÉÑÌ™É½´=Á•É…Ñ¥½¹Ìµ½ÍĞ½™Ñ•¸(€€€€€€€½ÁÌ€ô±¥ÍĞ¡™œ¹AIMQL¤¹¥¹‘•à ‰=Á•É…Ñ¥½¹Ìˆ¤(€€€€€€€‘•Á…ÉÑÌ€ôí¹…µ”è™±½…Ğ ¡¡½¥•Ím´°¥t€„ô¡½¥•Ím´°½ÁÍt¤¹µ•…¸ ¤¤™½È¤°¹…µ”¥¸•¹Õµ•É…Ñ”¡™œ¹AIMQL¤¥˜¤€„ô½ÁÍô(€€€€€€€É½İÌ¹…ÁÁ•¹¡‘¥Ğ¡½‘”õ™œ¹1MMMmul‰½‘”‰t°¹…µ”õ™œ¹1MMMmul‰¹…µ”‰t°¸õ¥¹Ğ¡´¹ÍÕ´ ¤¤°(€€€€€€€€€€€€€€€€€€€€€€€€ÍÑ…‰±•}Í¡…É”õÉ½Õ¹¡™±½…Ğ¡…É••mµt¹µ•…¸ ¤¤°€Ğ¤°(€€€€€€€€€€€€€€€€€€€€€€€€‘•Á…ÉÑÌõí¬èÉ½Õ¹¡Ø°€Ğ¤™½È¬°Ø¥¸‘•Á…ÉÑÌ¹¥Ñ•µÌ ¤¥ô¤¤(€€€É•ÑÕÉ¸‘¥Ğ¡½Ù•É…±°õÉ½Õ¹¡™±½…Ğ¡…É•”¹µ•…¸ ¤¤°€Ğ¤°±…ÍÍ•ÌõÉ½İÌ¤(
