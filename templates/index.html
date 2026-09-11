@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic Decision Mathematics</title>
+  <meta name="description" content="A mathematical control plane for agentic AI in securities operations: belief states, conformal calibration, robust optimisation, autonomy allocation and formally verified controls.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">Agentic Decision Mathematics
+        <small>A mathematical control plane between any agent and operational systems</small>
+      </div>
+      <nav class="nav" aria-label="Screens">
+        <a href="#overview" data-screen="overview">Overview<span>Architecture and lattice</span></a>
+        <a href="#arena" data-screen="arena">Decision Arena<span>Agents, one judge</span></a>
+        <a href="#frontier" data-screen="frontier">Autonomy Frontier<span>Calibration and drift</span></a>
+        <a href="#sensitivity" data-screen="sensitivity">Policy Sensitivity<span>What the weights decide</span></a>
+        <a href="#savings" data-screen="savings">Savings Lab<span>Minutes versus people</span></a>
+        <a href="#proof" data-screen="proof">Proof &amp; Control<span>Invariants and evidence</span></a>
+      </nav>
+      <div class="rail-foot">Synthetic data only. No LLM sits in the decision path.</div>
+    </aside>
+    <main id="main" tabindex="-1" aria-live="polite"></main>
+  </div>
+  <div class="tooltip" id="tooltip" role="tooltip"></div>
+  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
