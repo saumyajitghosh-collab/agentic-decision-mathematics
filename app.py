@@ -106,19 +106,20 @@ def api_sensitivity():
 @app.post("/api/savings")
 def api_savings():
     b = body()
-    return jsonify(savings.lab(agent_idx(b.get("agent")), b.get("lambdas"),                                risk_budget=clamp_float(b.get("risk_budget"), -0.5, 1.0, 0.10),
-                                target=clamp_float(b.get("target"), 0.0, 0.9, 0.25)))
+    return jsonify(savings.lab(agent_idx(b.get("agent")), b.get("lambdas"),
+                               risk_budget=clamp_float(b.get("risk_budget"), -0.5, 1.0, 0.10),
+                               target=clamp_float(b.get("target"), 0.0, 0.9, 0.25)))
 
 
 @app.post("/api/proof")
 def api_proof():
     b = body()
-    return jsonify(math.simulate(clamp_int(b.get("n"), 50, 1500, 300), clamp_int(b.get("seed"), 0, 10**9, 11)))
+    return jsonify(gate.simulate(clamp_int(b.get("n"), 50, 1500, 300), clamp_int(b.get("seed"), 0, 10**9, 11)))
 
 
 @app.get("/api/evaluate")
 def api_evaluate_example():
-    return jsonify(mapping=external.EXAMPLE)
+    return jsonify(description="POST a proposal from any agent to this endpoint.", example=external.EXAMPLE)
 
 
 @app.post("/api/evaluate")
