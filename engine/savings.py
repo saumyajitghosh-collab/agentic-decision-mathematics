@@ -16,7 +16,7 @@ Stage 2 — size the workforce for the residual work (MILP):
   min   Σ_jt HC_jt + c_flex · Σ_t F_t
   s.t.  m · HC_jt + η · y_jt >= s · W_jt              capacity covers stressed workload
         Σ_j y_jt <= m · F_t                           flexible pool minutes per region
-        HC_jt >= floor_j                             control coverage (four-eyes needs two)
+        HC_jt >= floor_j                              control coverage (four-eyes needs two)
         HC_jt, F_t ∈ Z+,  y_jt >= 0
 Minutes removed and people removed diverge because of floors, integrality, stress
 buffers and skill boundaries. The lab reports both.
