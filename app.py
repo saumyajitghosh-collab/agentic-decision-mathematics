@@ -92,7 +92,7 @@ def api_frontier():
 @app.post("/api/sensitivity")
 def api_sensitivity():
     b = body()
-     keys = cfg.MAMDA = cfg.MAMDA-kEYS
+    keys = cfg.LAMBDA_KEYS
     x_key = b.get("x_key") if b.get("x_key") in keys else "F"
     y_key = b.get("y_key") if b.get("y_key") in keys else "H"
     if x_key == y_key:
