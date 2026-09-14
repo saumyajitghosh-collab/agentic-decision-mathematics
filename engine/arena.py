@@ -111,6 +111,7 @@ def load_case(case_id):
 
 def analyse(case_id, lam=None, mode="cvar", operating_agent="B"):
     cases, spec = load_case(case_id)
+    user_lam = cfg.normalise_lambdas(lam)
     lam = _mode_lambdas(lam, mode)
     op = AGENT_INDEX.get(operating_agent, 1)
     c_idx = int(cases["cls"][0])
@@ -118,7 +119,7 @@ def analyse(case_id, lam=None, mode="cvar", operating_agent="B"):
     feasible = ev["feasible"][0]
     J = objective(ev["comps"], lam)[0]
 
-    # contaminated beliefs (1−ε)·b + ε·δ_x for the robust mode
+    # contaminated beliefs (1-ε)·b + ε·δ_x for the robust mode
     cond = _repeat(cases, cfg.K)
     contaminated = (1 - cfg.ROBUST_EPS) * cases["belief"] + cfg.ROBUST_EPS * np.eye(cfg.K)
     ev_x = evaluate(cond, belief=contaminated)
@@ -177,9 +178,11 @@ def analyse(case_id, lam=None, mode="cvar", operating_agent="B"):
             optimal=a == a_star,
         ))
 
-    exp_star = int(np.where(feasible, objective(ev["comps"], _mode_lambdas(lam, "expected"))[0], np.inf).argmin())
-    cvar_star = int(np.where(feasible, J, np.inf).argmin())
-    rob_star = int(np.where(feasible, J_rob, np.inf).argmin())
+    exp_star = int(np.where(feasible, objective(ev["comps"], _mode_lambdas(user_lam, "expected"))[0], np.inf).argmin())
+    _j_x_user = objective(ev_x["comps"], user_lam)
+    _j_rob_user = np.where(robust_set[:, None], _j_x_user, -np.inf).max(0)
+    cvar_star = int(np.where(feasible, objective(ev["comps"], user_lam)[0], np.inf).argmin())
+    rob_star = int(np.where(feasible, _j_rob_user, np.inf).argmin())
     drift = drift_report(op)[c_idx]
     calib = calibration_status(op, c_idx, cfg.alpha_for_action(a_star))
 

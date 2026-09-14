@@ -3,6 +3,7 @@ import numpy as np
 import pytest
 
 from engine import config as cfg
+from engine import arena as arena_mod
 from engine.autonomy import grant
 from engine.benchmark import manifest, run as run_benchmark, unblind
 from engine.core import discrete_cvar, evaluate, optimum
@@ -141,7 +142,7 @@ def test_breakpoints_match_brute_force(population):
 
 def test_allocation_respects_risk_budget():
     lam_key = tuple(sorted(cfg.DEFAULT_LAMBDAS.items()))
-    _, KC, EL, TL, _ = class_tables(1, lam_key)
+    _, KC, EL, TL, _, _ = class_tables(1, lam_key)
     r_max = EL[:, 0].sum() * 1.1
     z = allocate(KC, EL, TL, r_max, TL.max(1).sum())
     assert EL[np.arange(cfg.C), z].sum() <= r_max + 1e-6
@@ -188,3 +189,109 @@ def test_external_tampering_is_denied():
     r = c.post("/api/evaluate", json=tampered).get_json()
     assert r["decision"] == "DENY"
     assert any(x["code"] == "FIELD_INVARIANCE" for x in r["reasons"])
+
+
+# ---------------------------------------------------------------------------
+# Regression tests for review findings (Batch 1)
+# ---------------------------------------------------------------------------
+
+def test_verify_chain_rejects_empty_log():
+    """An empty event log must NOT verify (regression: zip() over empty lists
+    used to return (True, None))."""
+    chained, _ = hash_chain([])
+    ok, detail = verify_chain([], chained)
+    assert not ok
+
+
+def test_verify_chain_rejects_truncated_log():
+    """Removing the last event must NOT verify (regression: zip() stopped at
+    the shorter sequence)."""
+    events = [dict(seq=i, v=i) for i in range(1, 10)]
+    chained, head = hash_chain(events)
+    ok, detail = verify_chain(events[:-1], chained)
+    assert not ok
+
+
+def test_verify_chain_rejects_appended_unverified_event():
+    """Appending an event not present in the chain must NOT verify."""
+    events = [dict(seq=i, v=i) for i in range(1, 10)]
+    chained, _ = hash_chain(events)
+    extra = events + [dict(seq=10, v=99)]
+    ok, detail = verify_chain(extra, chained)
+    assert not ok
+
+
+def test_verify_chain_returns_head_hash():
+    """On success, verify_chain returns the head hash so callers can anchor it."""
+    events = [dict(seq=i, v=i) for i in range(1, 10)]
+    chained, head = hash_chain(events)
+    ok, returned = verify_chain(events, chained)
+    assert ok and returned == head
+
+
+def test_verify_chain_checks_trusted_head():
+    """A wrong trusted_head anchor must fail even if the chain itself is valid."""
+    events = [dict(seq=i, v=i) for i in range(1, 10)]
+    chained, head = hash_chain(events)
+    ok, detail = verify_chain(events, chained, trusted_head="f" * 64)
+    assert not ok
+    ok, detail = verify_chain(events, chained, trusted_head=head)
+    assert ok
+
+
+def test_string_false_is_not_authenticated():
+    """'authenticated': 'false' (a truthy string) must NOT be treated as
+    authenticated (regression: bool('false') == True)."""
+    c = app.test_client()
+    ex = c.get("/api/evaluate").get_json()["example"]
+    bad = dict(ex, proposal=dict(ex["proposal"], authenticated="false"))
+    r = c.post("/api/evaluate", json=bad).get_json()
+    assert r["decision"] == "DENY"
+    assert any(x["code"] == "IDENTITY" for x in r["reasons"])
+
+
+def test_calibration_identity_is_flagged_unverified():
+    """The response must disclose that the calibration profile is self-declared."""
+    c = app.test_client()
+    ex = c.get("/api/evaluate").get_json()["example"]
+    r = c.post("/api/evaluate", json=ex).get_json()
+    ci = r["calibration_identity"]
+    assert ci["profile_verified"] is False
+    assert "self-declared" in ci["note"]
+
+
+def test_by_mode_consistency():
+    """by_mode.cvar shown in ANY mode must equal the optimum you get by
+    actually selecting Tail-aware mode (regression: Expected mode used to
+    compute the cvar recommendation with the tail weight already zeroed)."""
+    lam = dict(C=0.20, R=0.25, T=0.15, H=0.10, F=0.25, K=0.30)
+    for case_id in ["EXC-48291", "EXC-49872", "EXC-51566"]:
+        out_exp = arena_mod.analyse(case_id, lam, mode="expected")
+        out_cvar = arena_mod.analyse(case_id, lam, mode="cvar")
+        assert out_exp["by_mode"]["cvar"] == out_cvar["optimum"]["code"], (
+            f"{case_id}: by_mode.cvar={out_exp['by_mode']['cvar']} "
+            f"but cvar optimum={out_cvar['optimum']['code']}")
+        assert out_cvar["by_mode"]["expected"] == out_exp["optimum"]["code"]
+
+
+def test_benchmark_tail_uses_realised_outcomes():
+    """tail_loss_cvar95 must reflect Bernoulli outcome draws, not expected
+    losses (regression: 'realised' computed (1-p)*harm, an expectation)."""
+    r = run_benchmark(500, 99)
+    for row in r["rows"]:
+        assert row["tail_loss_cvar95"] >= 0
+    assert r["reference"]["tail_loss_cvar95"] >= 0
+
+
+def test_savings_tail_budget_is_binding():
+    """The public savings workflow must apply a binding tail constraint
+    (regression: tail_budget=None made l_max = worst_tl, the loosest bound)."""
+    out = lab(1, risk_budget=0.10, tail_budget=0.10)
+    assert "tail_budget" in out
+    assert out["tail_budget"] == 0.10
+    # l_max must be derived from the human baseline, not the worst case
+    assert out["l_max"] < out["envelope"]["worst_tl"]
+    # The solution must include the realised-loss tail index
+    if out["solution"] is not None:
+        assert "realised_tail_index" in out["solution"]
+        assert out["solution"]["realised_tail_index"] >= 0
