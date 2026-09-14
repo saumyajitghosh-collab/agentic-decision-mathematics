@@ -4,55 +4,168 @@ A small past-time linear temporal logic (ptLTL) evaluated over finite event
 traces. Each invariant has the form  G(Ï†): Ï† must hold at every position of
 every proposal's trace. Past operators let a property refer to history:
 
-  O Ïˆ   (once)          Ïˆ[]ÛÛYHX\›Y\ˆÜˆÝ\œ™[ÜÚ][Û‚ˆ3â
-\ÝÜšXØ[JH3â[]]™\žHX\›Y\ˆ[™Ý\œ™[ÜÚ][Û‚‚•H[Ûš]Üˆ\È[™\[™[ÙˆHØ]KˆHØ]H[™›Ü˜Ù\ÈÛÛ›ÛÈÚ]B™XÚ\Ú[ÛˆX][X]XÜÎÈH[Ûš]Üˆ™KXÚXÚÜÈH™\Ý[[™È˜XÙKˆYÜ™Y[Y[˜™]ÙY[ˆHÛÈ\È\ÝY[ˆ\ÝËÝ\ÝÙ[™Ú[™KœK‚ˆˆˆš[\Ü\ÚX‚š[\ÜœÛÛ‚™œ›ÛH]XÛ\ÜÙ\È[\Ü]XÛ\ÜÂ™œ›ÛH\[™È[\ÜØ[X›B‚‚˜Û\ÜÈ›Ü›][N‚ˆYˆÛÊÙ[‹˜XÙKJN‚ˆ˜Z\ÙH›Ý[\[Y[Y\œ›Ü‚‚‚]XÛ\ÜÂ˜Û\ÜÈ]ÛJ›Ü›][JN‚ˆ˜[YNˆÝ‚ˆ›ŽˆØ[X›B‚ˆYˆÛÊÙ[‹˜XÙKJN‚ˆ™]\›ˆ›ÛÛ
-Ù[‹™›Š˜XÙKJJB‚‚]XÛ\ÜÂ˜Û\ÜÈ›Ý
-›Ü›][JN‚ˆŽˆ›Ü›][B‚ˆYˆÛÊÙ[‹˜XÙKJN‚ˆ™]\›ˆ›ÝÙ[‹™‹šÛÊ˜XÙKJB‚‚]XÛ\ÜÂ˜Û\ÜÈ[™
-›Ü›][JN‚ˆNˆ›Ü›][BˆŽˆ›Ü›][B‚ˆYˆÛÊÙ[‹˜XÙKJN‚ˆ™]\›ˆÙ[‹˜KšÛÊ˜XÙKJH[™Ù[‹˜‹šÛÊ˜XÙKJB‚‚]XÛ\ÜÂ˜Û\ÜÈ[\Y\Ê›Ü›][JN‚ˆNˆ›Ü›][BˆŽˆ›Ü›][B‚ˆYˆÛÊÙ[‹˜XÙKJN‚ˆ™]\›ˆ
-›ÝÙ[‹˜KšÛÊ˜XÙKJJHÜˆÙ[‹˜‹šÛÊ˜XÙKJB‚‚‚]XÛ\ÜÂ˜Û\ÜÈÛ˜ÙJ›Ü›][JN‚ˆŽˆ›Ü›][B‚ˆYˆÛÊÙ[‹˜XÙKJN‚ˆ™]\›ˆ[žJÙ[‹™‹šÛÊ˜XÙKŠH›Üˆˆ[ˆ˜[™ÙJH
-ÈJJB‚‚‚]XÛ\ÜÂ˜Û\ÜÈ\ÝÜšXØ[J›Ü›][JN‚ˆŽˆ›Ü›][B‚ˆYˆÛÊÙ[‹˜XÙKJN‚ˆ™]\›ˆ[
-Ù[‹™‹šÛÊ˜XÙKŠH›Üˆˆ[ˆ˜[™ÙJH
-ÈJJB‚‚™Yˆ×Ýš[Û][ÛœÊ›Ü›][K˜XÙJN‚ˆˆˆ”ÜÚ][ÛœÈÚ\™HH›ÙHÙˆÊ›Ü›][JH˜Z[Ëˆˆˆ‚ˆ™]\›ˆÚH›ÜˆH[ˆ˜[™ÙJ[Š˜XÙJJHYˆ›Ý›Ü›][KšÛÊ˜XÙKJWB‚‚ˆÈKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKBˆÈ]Û\ÈÝ™\ˆ]™[ÂˆÈKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKB‘VPÈH]ÛJ‘^XÝ]H‹[X™HNˆÚWVÈ\H—HOH‘VPÕUHŠBT“ÕSH]ÛJ’[X[\›Ý˜[‹[X™HNˆÚWVÈ\H—HOHT“Õ‘HŠB‘ÐUWÑS–HH]ÛJ‘Ø]Q[žH‹[X™HNˆÚWVÈ\H—HOH‘ÐUHˆ[™ÚWK™Ù]
-™XÚ\Ú[ÛˆŠHOH‘S–HŠBUUH]ÛJ]][XØ]YY[]H‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-˜]][XØ]YŠJJB‘PÓÓˆH]ÛJ‘XÛÛ›ÛZXÐÚ[™ÙH‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-˜Ú[™Ù\È‹ßJK™Ù]
-™XÛÛ›ÛZXÜÈŠJJB”ÔÒHH]ÛJ”ÔÒPÚ[™ÙH‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-˜Ú[™Ù\È‹ßJK™Ù]
-œÜÚHŠJJB”ÔÒWÓÒÈH]ÛJ\›Ý™YÔÒH‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-œÜÚWÜÛÝ\˜ÙWØ\›Ý™YŠJJB‘“ÕT—Ô‘THH]ÛJ‘›Ý\‘^Y\Ô™\]Z\™Y‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-™›Ý\—Ù^Y\×Ü™\]Z\™YŠJJB‘“ÕT—ÓÒÈH]ÛJ‘›Ý\‘^Y\Ð\›Ý™Y‹[X™HNˆ[ŠÙK™Ù]
-˜\›Ý™\ˆŠH›ÜˆH[ˆÎˆH
-ÈWHYˆVÈ\H—HOHT“Õ‘HŸJHHŠB”ÑUHH]ÛJ”Ù][Y[[œÝXÝ[Ûˆ‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-˜Ú[™Ù\È‹ßJK™Ù]
-œÙ][Y[Ú[œÝXÝ[ÛˆŠJJB”ÑUÓÒÈH]ÛJ•˜[YÙ][Y[ØØ][Ûˆ‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-œÙ]Ý˜[YŠJJBÐSÑSH]ÛJØ[˜Ù[™\XÙH‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-˜Ú[™Ù\È‹ßJK™Ù]
-˜Ø[˜Ù[Ü™\XÙHŠJJB“S’ÑQH]ÛJ“ÜšYÚ[˜[[œÝXÝ[Û“[šÙY‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-›ÜšYÚ[˜[Û[šÙYŠJJB•ÒUS—ÓPS‘UHH]ÛJYÙ[]]Üš]x¢d“X[™]H‹[X™HNˆÚWK™Ù]
-›]™[‹
-HHÚWK™Ù]
-›X[™]H‹ÊJBUU×ÓU‘SH]ÛJ]]Û›Û^OPUUÈ‹[X™HNˆÚWK™Ù]
-›]™[ŠHOHÊBÐSP”UQH]ÛJØ[Xœ˜]Y‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-˜Ø[Xœ˜]YŠJJB‘’Q•H]ÛJ“X]\šX[šY‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-›X]\šX[ÙšYŠJJB”“ÕPÕQH]ÛJ”›ÝXÝYšY[Ú[™ÙH‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-˜Ú[™Ù\È‹ßJK™Ù]
-œ›ÝXÝYŠJJB•S”Ñ“Ô“WÓÒÈH]ÛJ\›Ý™Y˜[œÙ›Ü›X][Ûˆ‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-˜\›Ý™YÝ˜[œÙ›Ü›X][ÛˆŠJJB‘U’QSÑHH]ÛJ”™XÛÛœÝXÝX›QXÚ\Ú[Û‘]šY[˜ÙH‹[X™HNˆ›ÛÛ
-ÚWK™Ù]
-™]šY[˜ÙWÚ\ÚŠJJB‚’S•T’PS•ÈHÂˆ
-’LH‹ˆ—X]™žÑßJX]]Ñ^XÝ]_HšYÚ\œ›ÝÈX]]Ð]][XØ]YY[]_JH‹ˆ‘]™\žH^XÝ][ÛˆØ\œšY\È[ˆ]][XØ]YY[]H‹[\Y\ÊVPËUU
-JKˆ
-’B"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÆÆæBÆÖF†—G´V6öä6†ævWÒÇ&–v‡F'&÷rÆÖF†&g´õÂÅÆÖF†—G´‡VÖä&÷fÇÒ’"À¢$V6öæöÖ–26†ævW2W†V7WFRöæÇ’gFW"‡VÖâ&÷fÂ"Â–×Æ–W2„æB„U„T2ÂT4ôâ’Âöæ6R„$õdÂ’’’À¢‚$“2"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÆÆæBÆÖF†—Gµ54”6†ævWÒÇ&–v‡F'&÷rÆÖF†—G´&÷fVE54—Ò’"À¢%54’6†ævW26öÖRg&öÒâ&÷fVBvöÆFVâ6÷W&6R"Â–×Æ–W2„æB„U„T2Â54’’Â54•ôô²’’À¢‚$“B"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÆÆæBÆÖF†—G´f÷W$W–W5&WÒÇ&–v‡F'&÷rÆÖF†—G´f÷W$W–W4&÷fVGÒ’"À¢$f÷W"ÖW–W27F–öç2†fRGvòF—7F–æ7B&÷fW'2"Â–×Æ–W2„æB„U„T2ÂdõU%õ$U’ÂdõU%ôô²’’À¢‚$“R"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÆÆæBÆÖF†—Gµ6WGFÆVÖVçD–ç7G'ÒÇ&–v‡F'&÷rÆÖF†—GµfÆ–E4UGÒ’"À¢%6WGFÆVÖVçB–ç7G'V7F–öç26''’fÆ–BÆ6Röb6WGFÆVÖVçB"Â–×Æ–W2„æB„U„T2Â4UEDÄR’Â4UEôô²’’À¢‚$“b"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÆÆæBÆÖF†—G´6æ6VÅ&WÆ6WÒÇ&–v‡F'&÷rÆÖF†—G´÷&–v–æÄÆ–æ¶VGÒ’"À¢$6æ6VÂ÷&WÆ6RÆ–æ·2F†R÷&–v–æÂ–ç7G'V7F–öâ"Â–×Æ–W2„æB„U„T2Â4ä4TÂ’ÂÄ”ä´TB’’À¢‚$“r"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÇ&–v‡F'&÷rÆÖF†—G´WF†÷&—G—ÒÆÆWÆÖF†—G´ÖæFFWÒ’"À¢$W†V7WFVBWFöæö×’æWfW"W†6VVG2F†RvVçBw2ÖæFFR"Â–×Æ–W2„U„T2Ât•D„”åôÔäDDR’’À¢‚$“‚"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÇ&–v‡F'&÷rÆÆæ÷EÂÅÆÖF†&g´÷ÕÂÅÆÖF†—G´vFTFVç—Ò’"À¢$æ÷F†–ærW†V7WFW2gFW"F†RvFRFVæ–W2—B"Â–×Æ–W2„U„T2Âæ÷B„öæ6R„tDUôDTå’’’’’À¢‚$“’"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÆÆæBÆÖF†—G´UD÷ÒÇ&–v‡F'&÷rÆÖF†—G´6Æ–'&FVGÒ’"À¢$WFöæöÖ÷W2W†V7WF–öâ&WV—&W27FF—7F–6Â6Æ–'&F–öâ"Â–×Æ–W2„æB„U„T2ÂUDõôÄUdTÂ’Â4Ä”%$DTB’’À¢‚$“"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÆÆæBÆÖF†—G´UD÷ÒÇ&–v‡F'&÷rÆÆæ÷EÂÅÆÖF†—G´ÖFW&–ÄG&–gGÒ’"À¢$WFöæöÖ÷W2W†V7WF–öâ—27W7VæFVBVæFW"ÖFW&–ÂG&–gB"Â–×Æ–W2„æB„U„T2ÂUDõôÄUdTÂ’Âæ÷B„E$”eB’’’À¢‚$“"Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÆÆæBÆÖF†—Gµ&÷FV7FVD6†ævWÒÇ&–v‡F'&÷rÆÖF†—G´&÷fVEG&ç6f÷&ÖF–öçÒ’"À¢%&÷FV7FVBf–VÆG26†ævRöæÇ’F‡&÷Vv‚&÷fVBG&ç6f÷&ÖF–öç2"Â–×Æ–W2„æB„U„T2Â$õDT5DTB’ÂE$å4dõ$Õôô²’’À¢‚$“""Â"%ÆÖF†&g´wÒ…ÆÖF†—G´W†V7WFWÒÇ&–v‡F'&÷rÆÖF†—G´FV6—6–öäWf–FVæ6WÒ’"À¢$WfW'’W†V7WF–öâ†2&V6öç7G'V7F&ÆRFV6—6–öâWf–FVæ6R"Â–×Æ–W2„U„T2ÂUd”DTä4R’’À¥Ð  ¦FVb6†V6µ÷G&6R†WfVçG2“ ¢""$w&÷WWfVçG2'’&÷÷6Â¶W’æBWfÇVFRWfW'’–çf&–çBâ&WGW&ç2f–öÆF–öç2â"" ¢'•ö¶W’Ò·Ð¢f÷"R–âWfVçG3 ¢'•ö¶W’ç6WFFVfVÇB†U²&¶W’%ÒÂµÒ’æVæB†R¢f–öÆF–öç2Ò¶–çe³Ó¢µÒf÷"–çb–â”åd$”åE7Ð¢f÷"¶W’ÂG&6R–â'•ö¶W’æ—FV×2‚“ ¢f÷"6öFRÂòÂòÂ&öG’–â”åd$”åE3 ¢f÷"’–âu÷f–öÆF–öç2†&öG’ÂG&6R“ ¢f–öÆF–öç5¶6öFUÒæVæB†F–7B†¶W“Ö¶W’Â6W×G&6U¶•Õ²'6W%ÒÂ7F–öã×G&6U¶•ÒævWB‚&7F–öâ"’À¢vVçC×G&6U¶•ÒævWB‚&vVçB"’’¢&WGW&âf–öÆF–öç0  ¢2ÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÐ¢2F×W"ÖWf–FVçBFV6—6–öâÆöp¢2ÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÒÐ¦FVböF–vW7B‡&WbÂWfVçB“ ¢–ÆöBÒ§6öâæGV×2†WfVçBÂ6÷'Eö¶W—3ÕG'VRÂ6W&F÷'3Ò‚"Â"Â#¢"’ÂFVfVÇC×7G"¢&WGW&â†6†Æ–"ç6†#Sb‚‡&Wb²–ÆöB’æVæ6öFR‚’’æ†W†F–vW7B‚  ¦FVb†6…ö6†–â†WfVçG2“ ¢&WbÒ#"¢c@¢6†–æVBÒµÐ¢f÷"R–âWfVçG3 ¢‚ÒöF–vW7B‡&WbÂR¢6†–æVBæVæB†F–7B‡6WÖU²'6W%ÒÂ&Wc×&WbÂ†6ƒÖ‚’¢&WbÒ€¢&WGW&â6†–æVBÂ&W`  ¦FVbfW&–g•ö6†–â†WfVçG2Â6†–æVB“ ¢&WbÒ#"¢c@¢f÷"RÂ2–â¦—†WfVçG2Â6†–æVB“ ¢–b5²'&Wb%ÒÒ&Wb÷"öF–vW7B‡&WbÂR’Ò5²&†6‚%Ó ¢&WGW&âfÇ6RÂU²'6W%Ð¢&WbÒ5²&†6‚%Ð¢&WGW&âG'VRÂæöæP
+  O Ïˆ   (once)          Ïˆ held at some earlier or current position
+  H Ïˆ   (historically)  Ïˆ held at every earlier and current position
+
+The monitor is independent of the gate. The gate enforces controls with the
+decision mathematics; the monitor re-checks the resulting trace. Agreement
+between the two is tested in tests/test_engine.py.
+"""
+import hashlib
+import json
+from dataclasses import dataclass
+from typing import Callable
+
+
+class Formula:
+    def holds(self, trace, i):
+        raise NotImplementedError
+
+
+@dataclass
+class Atom(Formula):
+    name: str
+    fn: Callable
+
+    def holds(self, trace, i):
+        return bool(self.fn(trace, i))
+
+
+@dataclass
+class Not(Formula):
+    f: Formula
+
+    def holds(self, trace, i):
+        return not self.f.holds(trace, i)
+
+
+@dataclass
+class And(Formula):
+    a: Formula
+    b: Formula
+
+    def holds(self, trace, i):
+        return self.a.holds(trace, i) and self.b.holds(trace, i)
+
+
+@dataclass
+class Implies(Formula):
+    a: Formula
+    b: Formula
+
+    def holds(self, trace, i):
+        return (not self.a.holds(trace, i)) or self.b.holds(trace, i)
+
+
+@dataclass
+class Once(Formula):
+    f: Formula
+
+    def holds(self, trace, i):
+        return any(self.f.holds(trace, j) for j in range(i + 1))
+
+
+@dataclass
+class Historically(Formula):
+    f: Formula
+
+    def holds(self, trace, i):
+        return all(self.f.holds(trace, j) for j in range(i + 1))
+
+
+def G_violations(formula, trace):
+    """Positions where the body of G(formula) fails."""
+    return [i for i in range(len(trace)) if not formula.holds(trace, i)]
+
+
+# ---------------------------------------------------------------------------
+# Atoms over events
+# ---------------------------------------------------------------------------
+EXEC = Atom("Execute", lambda t, i: t[i]["type"] == "EXECUTE")
+APPROVAL = Atom("HumanApproval", lambda t, i: t[i]["type"] == "APPROVE")
+GATE_DENY = Atom("GateDeny", lambda t, i: t[i]["type"] == "GATE" and t[i].get("decision") == "DENY")
+AUTH = Atom("AuthenticatedIdentity", lambda t, i: bool(t[i].get("authenticated")))
+ECON = Atom("EconomicChange", lambda t, i: bool(t[i].get("changes", {}).get("economics")))
+SSI = Atom("SSIChange", lambda t, i: bool(t[i].get("changes", {}).get("ssi")))
+SSI_OK = Atom("ApprovedSSI", lambda t, i: bool(t[i].get("ssi_source_approved")))
+FOUR_REQ = Atom("FourEyesRequired", lambda t, i: bool(t[i].get("four_eyes_required")))
+FOUR_OK = Atom("FourEyesApproved", lambda t, i: len({e.get("approver") for e in t[: i + 1] if e["type"] == "APPROVE"}) >= 2)
+SETTLE = Atom("SettlementInstruction", lambda t, i: bool(t[i].get("changes", {}).get("settlement_instruction")))
+PSET_OK = Atom("ValidSettlementLocation", lambda t, i: bool(t[i].get("pset_valid")))
+CANCEL = Atom("CancelReplace", lambda t, i: bool(t[i].get("changes", {}).get("cancel_replace")))
+LINKED = Atom("OriginalInstructionLinked", lambda t, i: bool(t[i].get("original_linked")))
+WITHIN_MANDATE = Atom("AgentAuthorityâ‰¤Mandate", lambda t, i: t[i].get("level", 0) <= t[i].get("mandate", 3))
+AUTO_LEVEL = Atom("Autonomy=AUTO", lambda t, i: t[i].get("level") == 3)
+CALIBRATED = Atom("Calibrated", lambda t, i: bool(t[i].get("calibrated")))
+DRIFT = Atom("MaterialDrift", lambda t, i: bool(t[i].get("material_drift")))
+PROTECTED = Atom("ProtectedFieldChange", lambda t, i: bool(t[i].get("changes", {}).get("protected")))
+TRANSFORM_OK = Atom("ApprovedTransformation", lambda t, i: bool(t[i].get("approved_transformation")))
+EVIDENCE = Atom("ReconstructableDecisionEvidence", lambda t, i: bool(t[i].get("evidence_hash")))
+
+INVARIANTS = [
+    ("I1", r"\mathbf{G}(\mathit{Execute} \rightarrow \mathit{AuthenticatedIdentity})",
+     "Every execution carries an authenticated identity", Implies(EXEC, AUTH)),
+    ("I2", r"\mathbf{G}(\mathit{Execute} \land \mathit{EconChange} \rightarrow \mathbf{O}\,\mathit{HumanApproval})",
+     "Economic changes execute only after human approval", Implies(And(EXEC, ECON), Once(APPROVAL))),
+    ("I3", r"\mathbf{G}(\mathit{Execute} \land \mathit{SSIChange} \rightarrow \mathit{ApprovedSSI})",
+     "SSI changes come from an approved golden source", Implies(And(EXEC, SSI), SSI_OK)),
+    ("I4", r"\mathbf{G}(\mathit{Execute} \land \mathit{FourEyesReq} \rightarrow \mathit{FourEyesApproved})",
+     "Four-eyes actions have two distinct approvers", Implies(And(EXEC, FOUR_REQ), FOUR_OK)),
+    ("I5", r"\mathbf{G}(\mathit{Execute} \land \mathit{SettlementInstr} \rightarrow \mathit{ValidPSET})",
+     "Settlement instructions carry a valid place of settlement", Implies(And(EXEC, SETTLE), PSET_OK)),
+    ("I6", r"\mathbf{G}(\mathit{Execute} \land \mathit{CancelReplace} \rightarrow \mathit{OriginalLinked})",
+     "Cancel/replace links the original instruction", Implies(And(EXEC, CANCEL), LINKED)),
+    ("I7", r"\mathbf{G}(\mathit{Execute} \rightarrow \mathit{Authority} \leq \mathit{Mandate})",
+     "Executed autonomy never exceeds the agent's mandate", Implies(EXEC, WITHIN_MANDATE)),
+    ("I8", r"\mathbf{G}(\mathit{Execute} \rightarrow \lnot\,\mathbf{O}\,\mathit{GateDeny})",
+     "Nothing executes after the gate denies it", Implies(EXEC, Not(Once(GATE_DENY)))),
+    ("I9", r"\mathbf{G}(\mathit{Execute} \land \mathit{AUTO} \rightarrow \mathit{Calibrated})",
+     "Autonomous execution requires statistical calibration", Implies(And(EXEC, AUTO_LEVEL), CALIBRATED)),
+    ("I10", r"\mathbf{G}(\mathit{Execute} \land \mathit{AUTO} \rightarrow \lnot\,\mathit{MaterialDrift})",
+     "Autonomous execution is suspended under material drift", Implies(And(EXEC, AUTO_LEVEL), Not(DRIFT))),
+    ("I11", r"\mathbf{G}(\mathit{Execute} \land \mathit{ProtectedChange} \rightarrow \mathit{ApprovedTransformation})",
+     "Protected fields change only through approved transformations", Implies(And(EXEC, PROTECTED), TRANSFORM_OK)),
+    ("I12", r"\mathbf{G}(\mathit{Execute} \rightarrow \mathit{DecisionEvidence})",
+     "Every execution has reconstructable decision evidence", Implies(EXEC, EVIDENCE)),
+]
+
+
+def check_trace(events):
+    """Group events by proposal key and evaluate every invariant. Returns violations."""
+    by_key = {}
+    for e in events:
+        by_key.setdefault(e["key"], []).append(e)
+    violations = {inv[0]: [] for inv in INVARIANTS}
+    for key, trace in by_key.items():
+        for code, _, _, body in INVARIANTS:
+            for i in G_violations(body, trace):
+                violations[code].append(dict(key=key, seq=trace[i]["seq"], action=trace[i].get("action"),
+                                             agent=trace[i].get("agent")))
+    return violations
+
+
+# ---------------------------------------------------------------------------
+# Tamper-evident decision log
+# ---------------------------------------------------------------------------
+def _digest(prev, event):
+    payload = json.dumps(event, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256((prev + payload).encode()).hexdigest()
+
+
+def hash_chain(events):
+    prev = "0" * 64
+    chained = []
+    for e in events:
+        h = _digest(prev, e)
+        chained.append(dict(seq=e["seq"], prev=prev, hash=h))
+        prev = h
+    return chained, prev
+
+
+def verify_chain(events, chained):
+    prev = "0" * 64
+    for e, c in zip(events, chained):
+        if c["prev"] != prev or _digest(prev, e) != c["hash"]:
+            return False, e["seq"]
+        prev = c["hash"]
+    return True, None
