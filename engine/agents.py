@@ -11,8 +11,8 @@ from .state import posterior
 
 AGENTS = [
     dict(code="A", name="Agent A", style="Fast fixer: acts on its favourite diagnosis, always requests AUTO",
-        tau=0.55, sigma=0.90, noise_slot=0),
-    dict(code="B", name="Agent B", style="Cost-aware: weights cost, time and reversibility, requests AUTO only when confident",
+         tau=0.55, sigma=0.90, noise_slot=0),
+    dict(code="B", name="Agent B", style="Cost-aware: weighs cost, time and reversibility, requests AUTO only when confident",
          tau=1.00, sigma=0.45, noise_slot=1),
     dict(code="R", name="Rules baseline", style="Deterministic rules: ignores soft feeds, maps diagnosis to a fixed action",
          tau=1.00, sigma=0.25, noise_slot=2),
@@ -22,7 +22,7 @@ AGENT_INDEX = {a["code"]: i for i, a in enumerate(AGENTS)}
 # Rules baseline: hypothesis -> action
 RULE_MAP = [cfg.ACTION_INDEX[c] for c in
             ["REPAIR_SSI", "REQUEST_CPTY", "REPAIR_PSET", "BORROW", "FUND", "AMEND_ECON", "WAIT"]]
-SOFT_FEDDS = [2, 7]  # CPTY_SSI_UPDATED, FEED_LAG
+SOFT_FEEDS = [2, 7]  # CPTY_SSI_UPDATED, FEED_LAG
 
 
 def interpretation(agent_idx, cases):
@@ -59,6 +59,6 @@ def propose(agent_idx, cases, p_hat=None):
         action = agent_actions[util.argmax(1)]
         level = np.where(p_hat.max(1) > 0.80, cfg.AUTO, cfg.APPROVE)
     else:
-        action = np.array(RULE_MAPP)[top]
+        action = np.array(RULE_MAP)[top]
         level = np.full(n, cfg.APPROVE)
     return action, level, p_hat
