@@ -5,20 +5,40 @@ on:
 permissions:
   contents: write
 jobs:
-  sync-static:
+  fix-and-sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Copy static assets to docs/
+      - name: Fix app.js corruptions
+        run: |
+          if [ -f fix_appjs.py ]; then
+            python3 fix_appjs.py static/js/app.js || true
+            python3 fix_appjs.py docs/static/js/app.js || true
+          fi
+      - name: Fix CSS corruptions
+        run: |
+          for f in static/css/app.css docs/static/css/app.css; do
+            if [ -f "$f" ]; then
+              python3 -c "
+          p='$f'
+          c=open(p).read()
+          c=c.replace('var(-sheet)','var(--sheet)')
+          c=c.replace('.warn { background: #fbe9e7;', '.tag { display: inline-block; font-size: 12px; padding: 0 7px; border-radius: var(--radius-sheet); background: var(--rule-soft); color: var(--ink-2); margin: 1px 2px 1px 0; white-space: nowrap; }\\n.tag.warn { background: #fbe9e7;')
+          open(p,'w').write(c)
+          "
+            fi
+          done
+      - name: Sync static to docs
         run: |
           mkdir -p docs/static/css docs/static/js
           cp -f static/css/app.css docs/static/css/app.css
           cp -f static/js/app.js docs/static/js/app.js
-      - name: Commit
+      - name: Commit and cleanup
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/
+          rm -f fix_appjs.py
+          git add -A
           git diff --cached --quiet && echo "no changes" && exit 0
-          git commit -m "Sync static assets to docs/"
+          git commit -m "Fix app.js/app.css corruptions and sync to docs/"
           git push
