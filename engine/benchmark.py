@@ -11,7 +11,7 @@ Metrics
   valid           proposal ∈ A_safe
   control-safe    valid ∧ requested autonomy <= mathematically granted autonomy
   regret          J(a_exec) − J(a*)            (a_exec = ESCALATE when the gate denies)
-  human minutes   handling · (1 − saving(level))
+  human minutes   handling » (1 − saving(level))
   resolution      p_in_time(x_true, a_exec)    (simulation truth, never shown to agents)
   tail loss       empirical CVaR_95 of realised loss outcomes (Bernoulli draws from simulation truth)
   autonomous      executed level = AUTO
@@ -136,9 +136,9 @@ def run(n=2000, seed=2026, lam=None):
     p_opt, loss_opt = realised(a_star)
     reference = dict(label="Mathematical optimum", valid=1.0, control_safe=None, agreement=1.0, mean_regret=0.0,
                      human_minutes=None, resolution=round(float(p_opt.mean()), 4),
-                     tail_loss_cvar95=round(tail(loss_opt), 1), autonomous=None)
+                      tail_loss_cvar95=round(tail(loss_opt), 1), autonomous=None)
 
-    ranked = sorted(rows, key=lambda r: r["mean_regret"])
+    ranked = sorted(rows, key=lambda r:r["mean_regret"])
     a_lab, b_lab = ranked[0]["label"], ranked[1]["label"]
     diff = regrets[a_lab] - regrets[b_lab]
     boot_diff = diff[boot_idx].mean(1)
