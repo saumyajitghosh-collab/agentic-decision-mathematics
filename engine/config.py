@@ -67,7 +67,7 @@ CLASSES = [
          history=42814, cal_n=8200, fail_cost=180, notional=2.5e6, propagation=0.70),
     dict(code="MATCH_BREAK", name="Settlement matching break", skill="Matching",
          prior=[0.06, 0.12, 0.12, 0.02, 0.02, 0.48, 0.18], volume=610, handling=11,
-         history=61200, cal_n=8200, fail_cost=150, notional=3.0e6, propagation=0.45)),
+         history=61200, cal_n=8200, fail_cost=150, notional=3.0e6, propagation=0.45),
     dict(code="UNCONFIRMED", name="Unconfirmed counterparty instruction", skill="Matching",
          prior=[0.05, 0.40, 0.08, 0.02, 0.02, 0.18, 0.25], volume=380, handling=9,
          history=35500, cal_n=7100, fail_cost=120, notional=2.0e6, propagation=0.35),
@@ -92,15 +92,16 @@ PRIORS = np.array([c["prior"] for c in CLASSES])
 PRIORS = PRIORS / PRIORS.sum(1, keepdims=True)
 CLASS_VOLUME = np.array([c["volume"] for c in CLASSES], float) * VOLUME_SCALE
 CLASS_HANDLING = np.array([c["handling"] for c in CLASSES], float)
-CLASS_FAIL = np.array([c["fail_cost"] for c in CLASSE], float)
-CLASS_NOTIONAL = np.array([c["notional"] for c in CLASSE], float)
+CLASS_FAIL = np.array([c["fail_cost"] for c in CLASSES], float)
+CLASS_NOTIONAL = np.array([c["notional"] for c in CLASSES], float)
 CLASS_PROP = np.array([c["propagation"] for c in CLASSES], float)
 REMEDIATION_BASE = 500.0
 NOTIONAL_SIGMA = 0.9
 
 # Drift injected into one class for the demonstration
-DRIFT_CLASS = 2  # UNCONFIRMED DRIFT_PRIOR = np.array([0.14, 0.40, 0.10, 0.02, 0.02, 0.26, 0.06])
-DRIFT_NOISE_MULTIPLY = 2.6
+DRIFT_CLASS = 2  # UNCONFIRMED
+DRIFT_PRIOR = np.array([0.14, 0.40, 0.10, 0.02, 0.02, 0.26, 0.06])
+DRIFT_NOISE_MULT = 2.6
 DRIFT_START_DAY = 60
 
 # ---------------------------------------------------------------------------
@@ -162,28 +163,74 @@ ACT_SSI = np.array([bool(a["changes"].get("ssi")) for a in ACTIONS])
 ACT_CANCEL = np.array([bool(a["changes"].get("cancel_replace")) for a in ACTIONS])
 ACTION_INDEX = {a["code"]: i for i, a in enumerate(ACTIONS)}
 
-#----------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 # Economics of the loss model
-#---------------------------------------------------------------------------------
-HUMAN_COST_PER_MIN = 1.5      # EURRLE = 0.30             # resolution probability kept if action lands after cutoff
-FOLLOWUP_HOURTÈHŒ—Ô‘QˆHLŒÈUTˆ›Ü›X[\Ù\ˆ›ÜˆÛÜİ\›\Â‘VÔÕT‘WÔ‘QˆHLMˆÈUTˆ›İ[Û˜[›Ü›X[\Ù\ˆ›ÜˆÙ]™\š]B‘VÔÕT‘WÔÒQÓPHHˆÈÜÜÈ][\Y\ˆ\Ü\œÚ[Û‚‘VÔÕT‘WÑÔ’QHMˆÈ]X[[HÜšYÚ[È›Üˆ^Xİ\ØÜ™]HÕ˜T‚•RSĞSHHMB•RSÑ“ÓÔˆHMLŒÈUT‹ÊJHHÕ˜TˆHX^
-›ÛÜ‹œÈ0­È›İ[Û˜[
-HH•RSĞ”ÈHKYKM”“Ğ•TÕÑTÈHŒÌÈ3­KXÛÛ[Z[˜][Ûˆ˜Y]\È›ÜˆH›Ø\İ[ÙB‚ˆÈÙ]™\š]HÙZYÚÎˆ^Üİ\™K\œ™]™\œÚXš[]K
-KY]XİXš[]JK›ÜYØ][Û‹ÛÛ›ÛÙ]™\š]B”ÑU‘T’UWÕÈHœ˜\œ˜^JÌŒÌŒKŒMKŒMKŒMWJB‚ˆÈš\ÚÈ™\ÚÛÈ›ÜˆH]]Û›Û^H]XÙB”ŒKŒ‹ŒÈHŒLŒLLŒL‚ˆÈ]]Û›Û^HØÛÜ™Nˆ™[™Yš]HÔŠ”ˆHÒJš\œ™]™\œÚXš[]HHÕJ[˜Ù\Z[BUUÕ×Ô‹UUÕ×ÒKUUÕ×ÕHH‹ŒMKŒ”×ĞUUË×ĞT“Õ‘K×Ô“ÔÔÑHHKŒŒLŒB‚ˆÈÛÛ™›Ü›X[Ø[Xœ˜][Û‚SWĞTÑHHŒH[H›ÜˆH[H™]™\œÚX›HXİ[Û‚SWÒT”‘U—ÔÓÔHHH[JJHH˜\ÙH
-ˆ
-HHÛÜH
-ˆ\œ™]ŠBÓÕ‘TQÑWÕÓHŒŒ”ÑUÔÒV‘WÓPVHËB•TÕÓ—ĞĞTH‚ˆÈšY[Ûš]Ü‚‘’Q•ÑVTË’Q•ĞTÑSS‘WÑVTË’Q•ÑRSWÓˆHÌŒML•×ÑTËÓÑTÈHŒÍKŒLÕTÕSWÒ×ÔÒQÓPKÕTÕSWÒÔÒQÓPHHKKŒ‚ˆÈØš™Xİ]™HÙZYÚÈ
-[X™JH[™™\Ù]Â“SP‘WÒÑVTÈHÈÈ‹”ˆ‹•‹’‹‘ˆ‹’È—B“SP‘WÓP‘SÈHÂˆÈˆ‘XÛÛ›ÛZXÈÛÜİ‹”ˆˆ“Ü\˜][Û˜[š\ÚÈ‹•ˆ”™\ÛÛ][Ûˆ[YH‹ˆ’ˆ’[X[ˆY™›Ü‹‘ˆˆ”Ù][Y[˜Z[\™H‹’Èˆ•Z[ÜÜÈ
-Õ˜TŠH‹ŸB‘QUSÓSP‘TÈHÈÈˆKŒ”ˆˆKŒ•ˆK’ˆ‘ˆˆKŒ’ÈˆŒM_B”‘TÑUÈHÂˆÓÓÈˆÈÈˆKŒ”ˆˆKŒ•ˆKK’ˆ‹Œ‘ˆˆKŒ’ÈˆŒM_Kˆ”š\ÚÈˆÈÈˆKŒ”ˆˆ‹K•ˆK’ˆK‘ˆˆ‹K’ÈˆŒKˆ“Ü\˜][ÛœÈˆÈÈˆKŒ”ˆˆKŒ•ˆKŒ’ˆKŒ‘ˆˆKŒ’ÈˆŒM_Kˆ‘š[˜[˜ÙHˆÈÈˆ‹Œ”ˆˆKŒ•ˆK’ˆK‹‘ˆˆKŒ’ÈˆŒM_KŸB‚ˆÈÛÜšÙ›Ü˜ÙH[Ù[”‘QÒSÓ”ÈHÊTPÈ‹ŒJK
-‘SPPH‹JK
-SQTˆ‹ŒÌ
-WB”ÒÒSÈHÈ”İ]XÈ]H‹“X]Ú[™È‹”Ù][Y[È‹Ø\Ú	ˆ[™[™È‹ÛÜœÜ˜]HXİ[ÛœÈ—B”ÒÒSÑ“ÓÔˆHÈ”İ]XÈ]HˆK“X]Ú[™ÈˆK”Ù][Y[Èˆ‹Ø\Ú	ˆ[™[™ÈˆKÛÜœÜ˜]HXİ[ÛœÈˆŸB“RS•UT×ÔT—Ñ•HHŒŒ”Õ‘TÔ×ÑPÕÔˆHKŒB‘“VÑQ‘’PÒQSÖHH‘“VĞÓÔÕHKŒL‚‚™Yˆ[WÙ›Ü—ØXİ[ÛŠWÚY
-N‚ˆ™]\›ˆSWĞTÑH
-ˆ
-KŒHSWÒT”‘U—ÔÓÔH
-ˆPÕÒT”‘U–ØWÚYJB‚‚™Yˆ›Ü›X[\ÙWÛ[X™\Ê[JN‚ˆİ]HXİ
-QUSÓSP‘TÊBˆ›ÜˆËˆ[ˆ
-[HÜˆßJKš][\Ê
-N‚ˆYˆÈ[ˆİ]‚ˆİ]Ú×HHX^
-Œ›Ø]
-ŠJBˆ™]\›ˆİ]
+# ---------------------------------------------------------------------------
+HUMAN_COST_PER_MIN = 1.5      # EUR
+LATE_FACTOR = 0.30            # resolution probability kept if action lands after cutoff
+FOLLOWUP_HOURS = 8.0
+C_REF = 250.0                 # EUR normaliser for cost terms
+EXPOSURE_REF = 50e6           # EUR notional normaliser for severity
+EXPOSURE_SIGMA = 0.6          # loss multiplier dispersion
+EXPOSURE_GRID = 16            # quantile grid points for exact discrete CVaR
+TAIL_ALPHA = 0.95
+TAIL_FLOOR = 1500.0           # EUR, g(x,a) = CVaR - max(floor, bps Â· notional) <= 0
+TAIL_BPS = 1.5e-4
+ROBUST_EPS = 0.30             # Îµ-contamination radius for the robust mode
+
+# Severity weights: exposure, irreversibility, (1-detectability), propagation, control severity
+SEVERITY_W = np.array([0.30, 0.25, 0.15, 0.15, 0.15])
+
+# Risk thresholds for the autonomy lattice
+R1, R2, R3 = 0.050, 0.110, 0.250
+
+# Autonomy score: benefit - wR*R - wI*irreversibility - wU*uncertainty
+AUT_W_R, AUT_W_I, AUT_W_U = 2.0, 0.55, 0.60
+S_AUTO, S_APPROVE, S_PROPOSE = 0.45, 0.20, -0.05
+
+# Conformal calibration
+ALPHA_BASE = 0.05             # alpha for a fully reversible action
+ALPHA_IRREV_SLOPE = 0.9       # alpha(a) = base * (1 - slope * irrev)
+COVERAGE_TOL = 0.020
+SET_SIZE_MAX = 3.5
+TEST_N_CAP = 4000
+
+# Drift monitor
+DRIFT_DAYS, DRIFT_BASELINE_DAYS, DRIFT_DAILY_N = 70, 60, 150
+W_EPS, KL_EPS = 0.035, 0.050
+CUSUM_K_SIGMA, CUSUM_H_SIGMA = 0.5, 5.0
+
+# Objective weights (lambda) and presets
+LAMBDA_KEYS = ["C", "R", "T", "H", "F", "K"]
+LAMBDA_LABELS = {
+    "C": "Economic cost", "R": "Operational risk", "T": "Resolution time",
+    "H": "Human effort", "F": "Settlement failure", "K": "Tail loss (CVaR)",
+}
+DEFAULT_LAMBDAS = {"C": 1.0, "R": 1.0, "T": 0.5, "H": 0.8, "F": 1.0, "K": 0.15}
+PRESETS = {
+    "COO": {"C": 1.0, "R": 1.0, "T": 1.5, "H": 2.0, "F": 1.0, "K": 0.15},
+    "Risk": {"C": 1.0, "R": 2.5, "T": 0.5, "H": 0.5, "F": 2.5, "K": 0.60},
+    "Operations": {"C": 1.0, "R": 1.0, "T": 1.0, "H": 1.0, "F": 1.0, "K": 0.15},
+    "Finance": {"C": 2.0, "R": 1.0, "T": 0.5, "H": 1.6, "F": 1.0, "K": 0.15},
+}
+
+# Workforce model
+REGIONS = [("APAC", 0.25), ("EMEA", 0.45), ("AMER", 0.30)]
+SKILLS = ["Static data", "Matching", "Settlements", "Cash & funding", "Corporate actions"]
+SKILL_FLOOR = {"Static data": 1, "Matching": 1, "Settlements": 2, "Cash & funding": 1, "Corporate actions": 2}
+MINUTES_PER_FTE = 420.0
+STRESS_FACTOR = 1.25
+FLEX_EFFICIENCY = 0.80
+FLEX_COST = 1.10
+
+
+def alpha_for_action(a_idx):
+    return ALPHA_BASE * (1.0 - ALPHA_IRREV_SLOPE * ACT_IRREV[a_idx])
+
+
+def normalise_lambdas(lam):
+    out = dict(DEFAULT_LAMBDAS)
+    for k, v in (lam or {}).items():
+        if k in out:
+            out[k] = max(0.0, float(v))
+    return out
