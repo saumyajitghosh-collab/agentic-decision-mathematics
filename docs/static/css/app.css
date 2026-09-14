@@ -149,6 +149,7 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .tag.tag { display: inline-block; font-size: 12px; padding: 0 7px; border-radius: var(--radius-sheet); background: var(--rule-soft); color: var(--ink-2); margin: 1px 2px 1px 0; white-space: nowrap; }
 .tag.tag { display: inline-block; font-size: 12px; padding: 0 7px; border-radius: var(--radius-sheet); background: var(--rule-soft); color: var(--ink-2); margin: 1px 2px 1px 0; white-space: nowrap; }
 .tag.tag { display: inline-block; font-size: 12px; padding: 0 7px; border-radius: var(--radius-sheet); background: var(--rule-soft); color: var(--ink-2); margin: 1px 2px 1px 0; white-space: nowrap; }
+.tag.tag { display: inline-block; font-size: 12px; padding: 0 7px; border-radius: var(--radius-sheet); background: var(--rule-soft); color: var(--ink-2); margin: 1px 2px 1px 0; white-space: nowrap; }
 .tag.warn { background: #fbe9e7; color: var(--deny); }
 .code { font-weight: 600; letter-spacing: 0.01em; }
 
