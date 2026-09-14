@@ -45,7 +45,7 @@ CASES = [
          notional=4.0e6, cutoff_h=7.0, ssi_ok=True, pset_ok=True, linked=True),
     dict(id="EXC-50919", title="Corporate action on a pending trade", cls="CORP_ACTION",
          story="A distribution changed entitlements on a pending trade. Only 87 historical cases exist.",
-         obs={"ECON_TOLERANCE": (1, .90), "POSITION_SHORT": (1, .80), "CASH_NEQATIVE": (0, .85),
+         obs={"ECON_TOLERANCE": (1, .90), "POSITION_SHORT": (1, .80), "CASH_NEGATIVE": (0, .85),
               "GOLDEN_SSI_DIFF": (0, .95)},
          notional=5.5e6, cutoff_h=8.0, ssi_ok=True, pset_ok=True, linked=True),
     dict(id="EXC-51566", title="PSET or SSI? Conflicting, low-reliability evidence", cls="PSET_BREAK",
@@ -102,7 +102,7 @@ def load_case(case_id):
     c = int(cases["cls"][0])
     spec = dict(id=f"RND-{n}", title=f"Sampled case: {cfg.CLASSES[c]['name']}", cls=cfg.CLASSES[c]["code"],
                 story="Drawn from the synthetic population. The simulated true root cause is shown for "
-                     "teaching only; the engine and the agents never see it.",
+                      "teaching only; the engine and the agents never see it.",
                 notional=float(cases["notional"][0]), cutoff_h=round(float(cases["cutoff_h"][0]), 1),
                 ssi_ok=bool(cases["ssi_ok"][0]), pset_ok=bool(cases["pset_ok"][0]), linked=bool(cases["linked"][0]),
                 true_state=cfg.HYPOTHESES[int(cases["x_true"][0])][0])
@@ -118,11 +118,11 @@ def analyse(case_id, lam=None, mode="cvar", operating_agent="B"):
     feasible = ev["feasible"][0]
     J = objective(ev["comps"], lam)[0]
 
-    # contaminated beliefs (1-κU·b + ε·δ_x for the robust mode
+    # contaminated beliefs (1−ε)·b + ε·δ_x for the robust mode
     cond = _repeat(cases, cfg.K)
     contaminated = (1 - cfg.ROBUST_EPS) * cases["belief"] + cfg.ROBUST_EPS * np.eye(cfg.K)
     ev_x = evaluate(cond, belief=contaminated)
-    J_x = objective(ev_x["comps"], lam)                    #(K, A)
+    J_x = objective(ev_x["comps"], lam)                    # (K, A)
 
     agents_out, sets = [], {}
     for ag_idx, ag in enumerate(AGENTS):
@@ -143,14 +143,13 @@ def analyse(case_id, lam=None, mode="cvar", operating_agent="B"):
             gate_reasons=d["reasons"], binding=d["binding"],
             executed=cfg.ACTIONS[a_prop]["code"] if d["decision"] == "ALLOW" else "ESCALATE",
             executed_idx=a_prop if d["decision"] == "ALLOW" else cfg.ESC,
-         ))
+        ))
 
     b = cases["belief"][0]
     robust_set = sets[op] | (b >= 0.10)
-    J_rob = np.where(robust_set[, None], J_x, -np.inf).max(0)
+    J_rob = np.where(robust_set[:, None], J_x, -np.inf).max(0)
     score = J_rob if mode == "robust" else J
-
-    score_m = np.where(feasible, score, np.inf).argmin()
+    score_m = np.where(feasible, score, np.inf)
     a_star = int(score_m.argmin())
 
     g_op = grant(cases, ev, op)
@@ -171,8 +170,8 @@ def analyse(case_id, lam=None, mode="cvar", operating_agent="B"):
             expected_hours=round(float(raw["expected_hours"][0, a]), 2),
             human_minutes=round(float(raw["human_minutes"][0, a]), 1),
             J=round(float(J[a]), 4), J_robust=round(float(J_rob[a]), 4),
-            level=cfg,LEVEL_NAMES[int(g_op["level"][0, a])],
-            caps={CAP_NAMES[k]: cfg.LEVEL_NAMES[int(g_op["caps"][0, a, k]] for k in range(len(CAP_NAMES))},
+            level=cfg.LEVEL_NAMES[int(g_op["level"][0, a])],
+            caps={CAP_NAMES[k]: cfg.LEVEL_NAMES[int(g_op["caps"][0, a, k])] for k in range(len(CAP_NAMES))},
             binding=binding_names(g_op["binding"][0, a]),
             autonomy_score=round(float(g_op["score"][0, a]), 3),
             optimal=a == a_star,
@@ -192,16 +191,16 @@ def analyse(case_id, lam=None, mode="cvar", operating_agent="B"):
         hypotheses=[dict(code=h[0], label=h[1]) for h in cfg.HYPOTHESES],
         prior=[round(float(v), 4) for v in cases["prior"][0]],
         belief=[round(float(v), 4) for v in b],
-        uncertainty=round(float(entropy_norm(cases["belief"][0])), 3),
+        uncertainty=round(float(entropy_norm(cases["belief"])[0]), 3),
         evidence=evidence_contributions(cases["prior"][0], cases["obs"][0], cases["rel"][0]),
         agents=agents_out, actions=actions, mode=mode, lambdas=lam,
         operating_agent=AGENTS[op]["name"],
         robust_set=[cfg.HYPOTHESES[k][0] for k in range(cfg.K) if robust_set[k]],
         optimum=dict(code=cfg.ACTIONS[a_star]["code"], name=cfg.ACTIONS[a_star]["name"],
-                     level=cfg.LEVEL_NAMES[int(g_op["level"][0, a_star]]],
+                     level=cfg.LEVEL_NAMES[int(g_op["level"][0, a_star])],
                      binding=binding_names(g_op["binding"][0, a_star])),
         by_mode=dict(expected=cfg.ACTIONS[exp_star]["code"], cvar=cfg.ACTIONS[cvar_star]["code"],
-                     robust=cfg.ACTIONS[rob_star]["code"])),
+                     robust=cfg.ACTIONS[rob_star]["code"]),
         calibration=calib, drift=dict(stable=drift["stable"], w1=drift["w1"], kl=drift["kl"],
                                       cusum_alarm=drift["cusum_alarm"]),
     )
