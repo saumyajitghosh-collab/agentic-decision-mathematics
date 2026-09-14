@@ -75,7 +75,7 @@ def evaluate(cases, belief=None):
     probs = np.concatenate([(1.0 - p_unres)[..., None], np.repeat((p_unres / Q)[..., None], Q, -1)], -1)
     cvar = discrete_cvar(losses, probs, cfg.TAIL_ALPHA)
 
-    expoY = np.minimum(1.0, cases["notional"] / cfg.EXPOSURE_REF)
+    expo = np.minimum(1.0, cases["notional"] / cfg.EXPOSURE_REF)
     feats = np.stack([
         np.broadcast_to(expo[:, None], (N, cfg.A)),
         np.broadcast_to(cfg.ACT_IRREV[None, :], (N, cfg.A)),
@@ -86,9 +86,9 @@ def evaluate(cases, belief=None):
     severity = feats @ cfg.SEVERITY_W
     R = p_err * severity
 
-    comps = dict(C=EL / cfg.C_REF, R=R, T=ET / 24.0, H=H / 60.0, F=p_unres, J=cvar / cfg.C_REF)
+    comps = dict(C=EL / cfg.C_REF, R=R, T=ET / 24.0, H=H / 60.0, F=p_unres, K=cvar / cfg.C_REF)
     raw = dict(tail_limit=np.broadcast_to(np.maximum(cfg.TAIL_FLOOR, cfg.TAIL_BPS * cases["notional"])[:, None], (N, cfg.A)),
-              expected_loss=EL, cvar=cvar, risk=R, p_err=p_err, p_fail=p_unres,
+               expected_loss=EL, cvar=cvar, risk=R, p_err=p_err, p_fail=p_unres,
                expected_hours=ET, human_minutes=H, severity=severity, p_in_time=pit)
 
     mask = np.zeros((N, cfg.A), int)
