@@ -190,7 +190,7 @@
       <div class="section">
         <div class="section-head"><h2>The autonomy lattice</h2><span class="small muted">Granted level is the meet of independent caps; each cap can only lower it.</span></div>
         <div class="lattice">${levels.map((l) => `<div>${lv(l)}<p>${esc(S.cat.levels[l])}</p></div>`).join("")}</div>
-        <div style="margin-top:12px">${eq(String.raw`\mathrm{AUTO(a)\iff \mathrm{Safe(a)\land\mathrm{Calibrated}(a)\land\mathrm{Stable}(a)\land\mathrm{Authorised}(a)`)}</div>
+        <div style="margin-top:12px">${eq(String.raw`\mathrm{AUTO}(a)\iff \mathrm{Safe}(a)\land\mathrm{Calibrated}(a)\land\mathrm{Stable}(a)\land\mathrm{Authorised}(a)`)}</div>
       </div>
 
       <div class="section grid g2">
@@ -459,7 +459,7 @@
           </div>
           <div class="sheet"><h3>Lattice rule</h3>
             ${eq(String.raw`\ell(a)=\min\{\mathrm{cap}_{\text{score}},\mathrm{cap}_{\text{risk}},\mathrm{cap}_{\text{calib}},\mathrm{cap}_{\text{drift}},\mathrm{cap}_{\text{mandate}},\mathrm{cap}_{\text{policy}}\}`)}
-            ${eq(String.raw`\mathrm{Score}(a)=\mathrm{Benefit}-2.0\,R-0.55\,\mathrm{Irrev}-0.60\,Ua)}
+            ${eq(String.raw`\mathrm{Score}(a)=\mathrm{Benefit}-2.0\,R-0.55\,\mathrm{Irrev}-0.60\,U)}}
             ${eq(String.raw`\alpha(a)=0.05\,(1-0.9\,\mathrm{irrev}_a)\;\Rightarrow\; n_{\text{cal}}\ge \lceil 1/\alpha(a)\rceil-1`, "The less reversible the action, the more calibration evidence autonomy requires.")}
           </div>
         </div>
