@@ -40,6 +40,7 @@ def class_tables(agent_idx, lam_key):
     KC = np.zeros((cfg.C, 4))
     EL = np.zeros((cfg.C, 4))
     TL = np.zeros((cfg.C, 4))
+    TL_real = np.zeros((cfg.C, 4))
     mix = np.zeros((cfg.C, 4))
     for c in range(cfg.C):
         cs = generate(PER_CLASS, seed_from("savings", c), class_idx=c)
@@ -61,7 +62,16 @@ def class_tables(agent_idx, lam_key):
             EL[c, zi] = vol * per_case.mean()
             q = np.quantile(per_case, cfg.TAIL_ALPHA)
             TL[c, zi] = vol * per_case[per_case >= q].mean()
-    return M, KC, EL, TL, mix
+            # Realised tail loss (Bernoulli draws from simulation truth)
+            p_loss = p_err * cfg.LEVEL_MISS[lvl]
+            _rng = np.random.default_rng(seed_from("savings_real", c, zi))
+            _u = _rng.random(PER_CLASS)
+            _fail = _u < p_loss
+            _rl = _fail * harm
+            _qr = np.quantile(_rl, cfg.TAIL_ALPHA)
+            _tail = _rl[_rl >= _qr]
+            TL_real[c, zi] = vol * (_tail.mean() if len(_tail) else 0.0)
+    return M, KC, EL, TL, TL_real, mix
 
 
 def allocate(KC, EL, TL, r_max, l_max):
@@ -122,18 +132,22 @@ def workforce(residual_minutes):
                 stressed_need=float(need.sum()), raw_need=float((W / m).sum()))
 
 
-def lab(agent_idx=1, lam=None, risk_budget=0.10, tail_budget=None, target=0.25, sweep=15):
-    """risk_budget: allowed change in expected operational loss versus the all-human process (0.10 = +10%)."""
+def lab(agent_idx=1, lam=None, risk_budget=0.10, tail_budget=0.10, target=0.25, sweep=15):
+    """risk_budget: allowed change in expected operational loss versus the all-human process (0.10 = +10%).
+    tail_budget: allowed change in CVaR_95 tail loss versus all-human (0.10 = +10%).
+    """
     lam = cfg.normalise_lambdas(lam)
-    M, KC, EL, TL, mix = class_tables(agent_idx, tuple(sorted(lam.items())))
+    M, KC, EL, TL, TL_real, mix = class_tables(agent_idx, tuple(sorted(lam.items())))
     total_minutes = float((cfg.CLASS_VOLUME * cfg.CLASS_HANDLING).sum())
     human_el = float(EL[:, 0].sum())
     human_tl = float(TL[:, 0].sum())
+    human_tl_real = float(TL_real[:, 0].sum())
     best_el, worst_el = float(EL.min(1).sum()), float(EL.max(1).sum())
     worst_tl = float(TL.max(1).sum())
+    worst_tl_real = float(TL_real.max(1).sum())
     base_wf = workforce(cfg.CLASS_VOLUME * cfg.CLASS_HANDLING)
     r_max = human_el * (1 + float(risk_budget))
-    l_max = worst_tl if tail_budget is None else human_tl * (1 + float(tail_budget))
+    l_max = human_tl * (1 + float(tail_budget))
 
     def solve(rm, lm):
         z = allocate(KC, EL, TL, rm, lm)
@@ -156,9 +170,12 @@ def lab(agent_idx=1, lam=None, risk_budget=0.10, tail_budget=None, target=0.25, 
     feasible_target = next((p for p in curve if p["fte_reduction"] >= target), None)
 
     out = dict(
-        agent=agent_idx, target=target, risk_budget=float(risk_budget), r_max=round(r_max, 1), l_max=round(l_max, 1),
+        agent=agent_idx, target=target, risk_budget=float(risk_budget),
+        tail_budget=float(tail_budget),
+        r_max=round(r_max, 1), l_max=round(l_max, 1),
         envelope=dict(human_el=round(human_el, 1), best_budget=round(lo_b, 4), worst_budget=round(hi_b, 4),
-                      human_tl=round(human_tl, 1), worst_tl=round(worst_tl, 1)),
+                      human_tl=round(human_tl, 1), worst_tl=round(worst_tl, 1),
+                      human_tl_real=round(human_tl_real, 1), worst_tl_real=round(worst_tl_real, 1)),
         baseline=dict(fte=base_wf["total"], minutes=round(total_minutes, 0)),
         curve=curve, target_feasible=feasible_target is not None, target_point=feasible_target,
         max_fte_reduction=max((p["fte_reduction"] for p in curve), default=0.0),
@@ -192,8 +209,9 @@ def lab(agent_idx=1, lam=None, risk_budget=0.10, tail_budget=None, target=0.25, 
         flex=dict(baseline=[int(v) for v in base_wf["F"]], optimised=[int(v) for v in wf["F"]],
                   regions=[r for r, _ in cfg.REGIONS]),
         fte=wf["total"], minutes_removed_pct=round(minutes_pct, 4), capacity_released_pct=round(captured_pct, 4),
-        fte_reduction_pct=round(fte_pct, 4), loss_index=round(el / human_el * 100, 1),
+        fte_reduction_pct=round(fte_pct, 4),        loss_index=round(el / human_el * 100, 1),
         tail_index=round(float(TL[np.arange(cfg.C), z].sum()) / human_tl * 100, 1),
+        realised_tail_index=round(float(TL_real[np.arange(cfg.C), z].sum()) / max(human_tl_real, 1) * 100, 1),
         floor_binding_cells=wf["floor_binding"],
         decomposition=dict(fragmentation=round(minutes_pct - captured_pct, 4),
                            staffing_rigidity=round(captured_pct - fte_pct, 4)),
