@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic Decision Mathematics</title>
+  <meta name="description" content="A mathematical control plane for agentic AI in securities operations: belief states, conformal calibration, robust optimisation, autonomy allocation and formally verified controls.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+  <link rel="stylesheet" href="static/css/app.css">
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="rail">
+      <div class="brand">Agentic Decision Mathematics
+        <small>A mathematical control plane between any agent and operational systems</small>
+      </div>
+      <nav class="nav" aria-label="Screens">
+        <a href="#overview" data-screen="overview">Overview<span>Architecture and lattice</span></a>
+        <a href="#arena" data-screen="arena">Decision Arena<span>Agents, one judge</span></a>
+        <a href="#frontier" data-screen="frontier">Autonomy Frontier<span>Calibration and drift</span></a>
+        <a href="#sensitivity" data-screen="sensitivity">Policy Sensitivity<span>What the weights decide</span></a>
+        <a href="#savings" data-screen="savings">Savings Lab<span>Minutes versus people</span></a>
+        <a href="#proof" data-screen="proof">Proof &amp; Control<span>Invariants and evidence</span></a>
+      </nav>
+      <div class="rail-foot">Synthetic data only. No LLM sits in the decision path.<br><span style="opacity:.55">Runs entirely in your browser (Pyodide).</span></div>
+    </aside>
+    <main id="main" tabindex="-1" aria-live="polite"></main>
+  </div>
+  <div class="tooltip" id="tooltip" role="tooltip"></div>
+  <div id="pyodide-loading" style="position:fixed;inset:0;background:#0d1117;display:flex;align-items:center;justify-content:center;z-index:9999;color:#e6edf3;font-family:'Instrument Sans',system-ui,sans-serif">
+    <div style="text-align:center">
+      <div style="font-size:1.4rem;font-weight:600;margin-bottom:.75rem">Agentic Decision Mathematics</div>
+      <div id="py-status" style="color:#7d8590;font-size:.95rem">Preparing the mathematical engine&hellip;</div>
+      <div style="margin:1.5rem auto 0;width:180px;height:3px;background:#21262d;border-radius:2px;overflow:hidden">
+        <div style="width:40%;height:100%;background:#2f81f7;border-radius:2px;animation:pyload 1.2s ease-in-out infinite alternate"></div>
+      </div>
+      <div style="color:#484f58;font-size:.8rem;margin-top:1.25rem">First load downloads ~15&nbsp;MB of runtime; cached afterwards.</div>
+    </div>
+  </div>
+  <style>
+    @keyframes pyload { from { transform: translateX(-60%); } to { transform: translateX(260%); } }
+  </style>
+  <script src="pyodide_bridge.js"></script>
+</body>
+</html>
