@@ -108,7 +108,8 @@ def api_savings():
     b = body()
     return jsonify(savings.lab(agent_idx(b.get("agent")), b.get("lambdas"),
                                risk_budget=clamp_float(b.get("risk_budget"), -0.5, 1.0, 0.10),
-                               target=clamp_float(b.get("target"), 0.0, 0.9, 0.25)))
+                               target=clamp_float(b.get("target"), 0.0, 0.9, 0.25),
+                               tail_budget=clamp_float(b.get("tail_budget"), -0.5, 2.0, 0.10)))
 
 
 @app.post("/api/proof")

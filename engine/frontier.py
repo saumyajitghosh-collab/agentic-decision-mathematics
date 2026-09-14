@@ -54,7 +54,7 @@ def frontier(agent_idx=1, n=3000):
             points[i]["efficient"] = False
 
     lam_key = tuple(sorted(cfg.DEFAULT_LAMBDAS.items()))
-    _, _, _, _, mix = class_tables(agent_idx, lam_key)
+    _, _, _, _, _, mix = class_tables(agent_idx, lam_key)
     class_mix = [dict(code=cfg.CLASSES[c]["code"], name=cfg.CLASSES[c]["name"],
                       mix={cfg.LEVEL_NAMES[i]: round(float(mix[c, i]), 3) for i in range(4)}) for c in range(cfg.C)]
     return dict(agent=AGENTS[agent_idx]["name"], points=points, thresholds=dict(r1=cfg.R1, r2=cfg.R2, r3=cfg.R3),
