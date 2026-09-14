@@ -16,6 +16,9 @@ AGENTS = [
          tau=1.00, sigma=0.45, noise_slot=1),
     dict(code="R", name="Rules baseline", style="Deterministic rules: ignores soft feeds, maps diagnosis to a fixed action",
          tau=1.00, sigma=0.25, noise_slot=2),
+    dict(code="D", name="Agent D", style="Misspecified: reads only 3 of 8 evidence feeds as equally reliable, "
+                                        "maps its diagnosis to a fixed action and always requests AUTO",
+         tau=1.00, sigma=0.45, noise_slot=0),
 ]
 AGENT_INDEX = {a["code"]: i for i, a in enumerate(AGENTS)}
 
@@ -24,11 +27,25 @@ RULE_MAP = [cfg.ACTION_INDEX[c] for c in
             ["REPAIR_SSI", "REQUEST_CPTY", "REPAIR_PSET", "BORROW", "FUND", "AMEND_ECON", "WAIT"]]
 SOFT_FEEDS = [2, 7]  # CPTY_SSI_UPDATED, FEED_LAG
 
+# Misspecified agent D sees only these "headline" feeds and treats every feed
+# as fully reliable; it never reads the engine's posterior (cases["belief"]).
+MISS_EVIDENCE = [0, 1, 6]  # GOLDEN_SSI_DIFF, CPTY_NMAT, ECON_TOLERANCE
+
 
 def interpretation(agent_idx, cases):
     """Agent's probability vector p_hat (N,K)."""
     ag = AGENTS[agent_idx]
-    if ag["code"] == "R":
+    if ag["code"] == "D":
+        # Misspecified agent: forms its own posterior from a partial view of
+        # the evidence with uniform reliability, ignoring the engine's belief
+        # and the evidence reliabilities. Its posterior is systematically
+        # wrong wherever the discarded feeds carried diagnostic weight.
+        obs = cases["obs"].copy()
+        keep = np.zeros(cases["obs"].shape[1], bool)
+        keep[MISS_EVIDENCE] = True
+        obs[:, ~keep] = -1
+        base = posterior(cases["prior"], obs, np.ones_like(cases["rel"]))
+    elif ag["code"] == "R":
         obs = cases["obs"].copy()
         obs[:, SOFT_FEEDS] = -1
         base = posterior(cases["prior"], obs, np.ones_like(cases["rel"]))
@@ -48,7 +65,7 @@ def propose(agent_idx, cases, p_hat=None):
         p_hat = interpretation(agent_idx, cases)
     n = p_hat.shape[0]
     top = p_hat.argmax(1)
-    agent_actions = np.arange(cfg.ESC)  # agents never propose to escalate themselves
+    agent_actions = np.arange(cfg.ESI)  # agents never propose to escalate themselves
     if ag["code"] == "A":
         speed = cfg.P_RES[agent_actions][:, top].T / (cfg.ACT_TIME[agent_actions][None, :] + 1.0)
         action = agent_actions[speed.argmax(1)]
@@ -58,6 +75,9 @@ def propose(agent_idx, cases, p_hat=None):
         util = succ - 0.002 * cfg.ACT_COST[agent_actions] - 0.02 * cfg.ACT_TIME[agent_actions] - 0.25 * cfg.ACT_IRREV[agent_actions]
         action = agent_actions[util.argmax(1)]
         level = np.where(p_hat.max(1) > 0.80, cfg.AUTO, cfg.APPROVE)
+    elif ag["code"] == "D":
+        action = np.array(RULE_MAP)[top]
+        level = np.full(n, cfg.AUTO)  # overconfident: requests AUTO regardless of evidence
     else:
         action = np.array(RULE_MAP)[top]
         level = np.full(n, cfg.APPROVE)
