@@ -65,7 +65,7 @@ def propose(agent_idx, cases, p_hat=None):
         p_hat = interpretation(agent_idx, cases)
     n = p_hat.shape[0]
     top = p_hat.argmax(1)
-    agent_actions = np.arange(cfg.ESI)  # agents never propose to escalate themselves
+    agent_actions = np.arange(cfg.ESC)  # agents never propose to escalate themselves
     if ag["code"] == "A":
         speed = cfg.P_RES[agent_actions][:, top].T / (cfg.ACT_TIME[agent_actions][None, :] + 1.0)
         action = agent_actions[speed.argmax(1)]
