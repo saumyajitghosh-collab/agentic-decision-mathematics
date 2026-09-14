@@ -2,7 +2,7 @@
 
 The control layer, not the agent, owns the belief about operational state:
 
-    b_n(x) = P(x_t = x | O_1:t)  ∝  P(x) · Π_e  P(o_e | x)^{r_e}
+    b_t(x) = P(x_t = x | O_1:t)  ∝  P(x) · Π_e  P(o_e | x)^{r_e}
 
 Evidence reliability r_e ∈ (0, 1] tempers each likelihood (a power posterior),
 so a stale or partially authoritative message moves the belief less than a
@@ -15,7 +15,8 @@ from . import config as cfg
 LOG_L1 = np.log(cfg.LIK)
 LOG_L0 = np.log(1.0 - cfg.LIK)
 
-def posterior(prior, obs, rel):
+
+def posterior(prior, obs, rel):
     """prior (N,K); obs (N,E) with 1 present, 0 absent, -1 unobserved; rel (N,E)."""
     o = obs[:, :, None]
     ll = np.where(o == 1, LOG_L1[None], np.where(o == 0, LOG_L0[None], 0.0))

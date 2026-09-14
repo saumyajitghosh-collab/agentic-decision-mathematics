@@ -5,8 +5,8 @@ attenuate autonomy, never raise it:
 
   score cap        AutonomyScore = Benefit − w_R·R − w_I·Irreversibility − w_U·Uncertainty
   risk cap         R < r1 → AUTO,  R < r2 → APPROVE,  R < r3 → PROPOSE
-  calibration cap    ¬Clibrated(class, agent, α(a)) → PROPOSE
-  drift cap       ¬Stable(class) → PROPOSE
+  calibration cap  ¬Calibrated(class, agent, α(a)) → PROPOSE
+  drift cap        ¬Stable(class) → PROPOSE
   mandate cap      level ≤ agent mandate for the action
   policy cap       fixed by action (economic change, cancel/replace → APPROVE at most)
 
@@ -39,14 +39,14 @@ def grant(cases, ev, agent_idx):
     raw = ev["raw"]
     handling = cases["handling"][:, None]
     benefit = np.clip(1.0 - raw["human_minutes"] / handling, 0.0, 1.0)
-    U = entropy_norm(cases["belief"])[/:, None]
+    U = entropy_norm(cases["belief"])[,: None]
     score = benefit - cfg.AUT_W_R * raw["risk"] - cfg.AUT_W_I * cfg.ACT_IRREV[None, :] - cfg.AUT_W_U * U
     score_cap = np.select([score >= cfg.S_AUTO, score >= cfg.S_APPROVE, score >= cfg.S_PROPOSE],
-                          [cfg.AUTO, cfg.APPROVE, cfg.PROPOSE], cfg.HUMAN])
+                          [cfg.AUTO, cfg.APPROVE, cfg.PROPOSE], cfg.HUMAN)
     R = raw["risk"]
     risk_cap = np.select([R < cfg.R1, R < cfg.R2, R < cfg.R3], [cfg.AUTO, cfg.APPROVE, cfg.PROPOSE], cfg.HUMAN)
     calibrated = calibrated_table(agent_idx)[cases["cls"]]          # (N, A)
-    stable = stable_vector(agent_idx)[cases["cls"]];:, None]        # (N, 1)
+    stable = stable_vector(agent_idx)[cases["cls"]][:, None]        # (N, 1)
     calib_cap = np.where(calibrated, cfg.AUTO, cfg.PROPOSE)
     drift_cap = np.broadcast_to(np.where(stable, cfg.AUTO, cfg.PROPOSE), (N, cfg.A))
     mandate_cap = np.broadcast_to(MANDATE[None, :], (N, cfg.A))
@@ -58,7 +58,7 @@ def grant(cases, ev, agent_idx):
     binding = (caps == level[..., None]) & (level[..., None] < cfg.AUTO) & (level[..., None] >= 0)
     binding[:, cfg.ESC, :] = False
     return dict(level=level, caps=caps, binding=binding, score=score, calibrated=calibrated,
-                  stable=np.broadcast_to(stable, (N, cfg.A)), benefit=benefit, uncertainty=U[:, 0])
+                stable=np.broadcast_to(stable, (N, cfg.A)), benefit=benefit, uncertainty=U[:, 0])
 
 
 def binding_names(binding_row):
