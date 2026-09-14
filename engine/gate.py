@@ -8,7 +8,7 @@ and it grants  min(requested level, mathematically granted level).
 
 The proof simulation runs the same proposals twice:
   shadow mode     the gate only logs; agents execute what they requested
-  enforcing mode  the gate decides; humans approve whene the level requires it
+  enforcing mode  the gate decides; humans approve where the level requires it
 and hands both traces to the independent temporal-logic monitor.
 """
 import hashlib
