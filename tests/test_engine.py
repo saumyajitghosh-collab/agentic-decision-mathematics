@@ -23,15 +23,14 @@ def population():
 
 def test_belief_is_a_distribution(population):
     cases, _ = population
-    assert np.allclose(cases["belief"].sum(1), 1.0
-
+    assert np.allclose(cases["belief"].sum(1), 1.0)
     assert (cases["belief"] >= 0).all()
 
 
 def test_cvar_matches_brute_force():
     rng = np.random.default_rng(0)
     for _ in range(50):
-        losses = rng.integers(1, 1000, 12).astype(float)
+        losses = rng.integers(0, 1000, 12).astype(float)
         counts = rng.integers(1, 20, 12)
         probs = counts / counts.sum()
         alpha = 0.9
@@ -51,7 +50,7 @@ def test_cvar_dominates_expected_loss(population):
 
 def test_escalate_is_always_feasible(population):
     _, ev = population
-    assert ev["feasible"][:: cfg.ESC].all()
+    assert ev["feasible"][:, cfg.ESC].all()
 
 
 def test_optimum_is_feasible_and_minimal(population):
@@ -71,7 +70,8 @@ def test_conformal_needs_enough_data():
 def test_conformal_coverage_meets_target():
     for c in [0, 1, 3]:
         st = calibration_status(1, c, 0.05)
-        assert st["coverage"] >= 0.95 - cfg.COVERAGE_TOL;
+        assert st["coverage"] >= 0.95 - cfg.COVERAGE_TOL
+
 
 def test_rare_class_is_not_calibrated():
     rare = [i for i, c in enumerate(cfg.CLASSES) if c["code"] == "CORP_ACTION"][0]
@@ -90,7 +90,7 @@ def test_autonomy_is_the_meet_of_caps(population):
     lvl, caps = g["level"], g["caps"]
     agent_actions = np.ones(cfg.A, bool)
     agent_actions[cfg.ESC] = False
-    feas = ev["feasible"] & agent_actions[none, :]
+    feas = ev["feasible"] & agent_actions[None, :]
     assert (lvl[feas] == caps[feas].min(-1)).all()
     auto = lvl == cfg.AUTO
     assert g["calibrated"][auto].all() and g["stable"][auto].all()
@@ -144,7 +144,7 @@ def test_allocation_respects_risk_budget():
     _, KC, EL, TL, _ = class_tables(1, lam_key)
     r_max = EL[:, 0].sum() * 1.1
     z = allocate(KC, EL, TL, r_max, TL.max(1).sum())
-    assert EL[np.arrange(cfg.C), z.vsum() <= r_max + 1e-6
+    assert EL[np.arange(cfg.C), z].sum() <= r_max + 1e-6
 
 
 def test_workforce_respects_floors():
@@ -159,7 +159,7 @@ def test_minutes_removed_exceed_headcount_released():
     assert s["minutes_removed_pct"] >= s["fte_reduction_pct"]
 
 
-def test_manifest_hash_is_deterministic_and_binding_reproducible():
+def test_manifest_hash_is_deterministic_and_blinding_reproducible():
     assert manifest(1000, 7, None)[1] == manifest(1000, 7, None)[1]
     r = run_benchmark(400, 7)
     assert r["manifest_hash"] == manifest(400, 7, None)[1]
