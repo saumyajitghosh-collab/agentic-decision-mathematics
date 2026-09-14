@@ -164,7 +164,70 @@ def test_manifest_hash_is_deterministic_and_blinding_reproducible():
     assert manifest(1000, 7, None)[1] == manifest(1000, 7, None)[1]
     r = run_benchmark(400, 7)
     assert r["manifest_hash"] == manifest(400, 7, None)[1]
-    assert sorted(unblind(r["manifest_hash"]).values()) == ["Agent A", "Agent B", "Rules baseline"]
+    assert sorted(unblind(r["manifest_hash"]).values()) == [
+        "Agent A", "Agent B", "Agent D", "Rules baseline"]
+
+
+# ---------------------------------------------------------------------------
+# Regression tests for review findings (Batch 2)
+# ---------------------------------------------------------------------------
+
+def test_misspecified_agent_ignores_engine_belief():
+    """Agent D must form its posterior from a partial evidence view, never from
+    cases['belief']. On a case where the discarded evidence is decisive its
+    posterior must differ from the engine's."""
+    from engine.agents import interpretation, AGENT_INDEX
+    from engine.arena import build_case
+    spec = dict(id="EXC-51566", title="t", cls="PSET_BREAK",
+                obs={"GOLDEN_SSI_DIFF": (1, .60), "PSET_NONDEFAULT": (1, .70),
+                     "CPTY_NMAT": (1, .60), "FEED_LAG": (1, .55), "ECON_TOLERANCE": (0, .90)},
+                notional=6e6, cutoff_h=5.0, ssi_ok=False, pset_ok=True, linked=True)
+    cases = build_case(spec)
+    d = interpretation(AGENT_INDEX["D"], cases)[0]
+    b = cases["belief"][0]
+    assert not np.allclose(d, b, atol=1e-6), "Agent D must not echo the engine's belief"
+
+
+def test_misspecified_agent_always_requests_auto():
+    """Agent D is overconfident — it requests AUTO regardless of confidence."""
+    from engine.agents import propose
+    from engine.state import generate
+    cases = generate(200, 42)
+    _, req, _ = propose(3, cases)  # agent_idx=3 is D
+    assert (req == cfg.AUTO).all()
+
+
+def test_benchmark_has_four_participants_and_disclosure():
+    """The benchmark must include the misspecified agent and disclose the design."""
+    r = run_benchmark(400, 7)
+    assert len(r["rows"]) == 4
+    assert "design" in r["manifest"]["agents"]
+    assert "misspecified" in r["manifest"]["agents"]["design"]
+
+
+def test_savings_uncertainty_sweep_present():
+    """lab() output must include an uncertainty sweep with named drivers
+    and a range (not a point forecast)."""
+    out = lab(1, risk_budget=0.10, tail_budget=0.10)
+    u = out["uncertainty"]
+    assert u is not None
+    assert len(u["drivers"]) == 2
+    assert "capture_scale" in u["drivers"][0]
+    assert "floor_scale" in u["drivers"][1]
+    assert u["fte_reduction_min"] < u["fte_reduction_max"]
+    assert u["fte_reduction_min"] <= u["fte_reduction_median"] <= u["fte_reduction_max"]
+    assert "point estimate" in u["note"]
+
+
+def test_r_thresholds_have_provenance():
+    """R1/R2/R3 must be anchored to a stated tolerable annual loss."""
+    assert hasattr(cfg, "TOLERABLE_ANNUAL_LOSS")
+    assert hasattr(cfg, "TRADING_DAYS")
+    assert hasattr(cfg, "DAILY_RISK_BUDGET")
+    assert cfg.TOLERABLE_ANNUAL_LOSS > 0
+    assert cfg.TRADING_DAYS > 0
+    assert abs(cfg.DAILY_RISK_BUDGET - cfg.TOLERABLE_ANNUAL_LOSS / cfg.TRADING_DAYS) < 1e-6
+    assert 0 < cfg.R1 < cfg.R2 < cfg.R3 < 1
 
 
 def test_api_endpoints():

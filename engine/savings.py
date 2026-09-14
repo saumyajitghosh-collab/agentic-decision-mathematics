@@ -90,8 +90,11 @@ def allocate(KC, EL, TL, r_max, l_max):
     return x.argmax(1)
 
 
-def workforce(residual_minutes):
-    """residual_minutes (C,) per day -> optimal staffing."""
+def workforce(residual_minutes, floor_scale=1.0):
+    """residual_minutes (C,) per day -> optimal staffing.
+
+    floor_scale multiplies the skill floors, for the uncertainty sweep.
+    """
     J_, T_ = len(cfg.SKILLS), len(cfg.REGIONS)
     W = np.zeros((J_, T_))
     for c in range(cfg.C):
@@ -118,18 +121,60 @@ def workforce(residual_minutes):
     lb = np.zeros(n)
     for j, skill in enumerate(cfg.SKILLS):
         for t in range(T_):
-            lb[j * T_ + t] = cfg.SKILL_FLOOR[skill]
+            lb[j * T_ + t] = cfg.SKILL_FLOOR[skill] * floor_scale
     integrality = np.concatenate([np.ones(nHC + nF), np.zeros(nY)])
     res = milp(cost, constraints=[LinearConstraint(np.array(rows), lo, hi)], integrality=integrality,
                bounds=Bounds(lb, np.inf))
     x = res.x
     HC = np.round(x[:nHC]).reshape(J_, T_)
     F = np.round(x[nHC:nHC + nF])
-    floors = np.array([[cfg.SKILL_FLOOR[sk]] * T_ for sk in cfg.SKILLS], float)
+    floors = np.array([[cfg.SKILL_FLOOR[sk] * floor_scale] * T_ for sk in cfg.SKILLS], float)
     need = s * W / m
     floor_binding = int(((HC == floors) & (floors > need)).sum())
     return dict(W=W, HC=HC, F=F, total=float(HC.sum() + F.sum()), floor_binding=floor_binding,
                 stressed_need=float(need.sum()), raw_need=float((W / m).sum()))
+
+
+def uncertainty_sweep(agent_idx, lam_key, r_max, l_max, base_wf, points=3):
+    """Range of achievable FTE reductions under the two least-certain assumptions.
+
+    Drivers (named, because the point estimate alone is not a forecast):
+      capture_scale  multiplies LEVEL_CAPTURE — how much saved handling time
+                     actually converts to releasable capacity
+      floor_scale    multiplies SKILL_FLOOR — control-coverage staffing floors
+
+    KC is linear in LEVEL_CAPTURE for fixed granted levels, so scaling the
+    capture parameter scales KC exactly; the allocation is unchanged (the
+    objective direction is preserved) and only the downstream workforce moves.
+    """
+    M, KC, EL, TL, _, _ = class_tables(agent_idx, lam_key)
+    z = allocate(KC, EL, TL, r_max, l_max)
+    if z is None:
+        return None
+    i = np.arange(cfg.C)
+    capture_grid = np.linspace(0.80, 1.20, points)
+    floor_grid = np.linspace(0.50, 1.50, points)
+    rows = []
+    for cs in capture_grid:
+        for fs in floor_grid:
+            residual = cfg.CLASS_VOLUME * cfg.CLASS_HANDLING - KC[i, z] * cs
+            wf = workforce(residual, floor_scale=float(fs))
+            rows.append(dict(capture_scale=round(float(cs), 2), floor_scale=round(float(fs), 2),
+                             fte_reduction=round(float(1 - wf["total"] / base_wf["total"]), 4)))
+    reds = [r["fte_reduction"] for r in rows]
+    return dict(
+        drivers=["capture_scale (LEVEL_CAPTURE multiplier)",
+                 "floor_scale (SKILL_FLOOR multiplier)"],
+        capture_grid=[round(float(x), 2) for x in capture_grid],
+        floor_grid=[round(float(x), 2) for x in floor_grid],
+        rows=rows,
+        fte_reduction_min=round(min(reds), 4),
+        fte_reduction_max=round(max(reds), 4),
+        fte_reduction_median=round(float(np.median(reds)), 4),
+        note="Illustration under stated assumptions. The headline FTE reduction is a "
+             "point estimate inside this range; capture and floors are the dominant "
+             "uncertainties and should be calibrated before any workforce decision.",
+    )
 
 
 def lab(agent_idx=1, lam=None, risk_budget=0.10, tail_budget=0.10, target=0.25, sweep=15):
@@ -185,6 +230,7 @@ def lab(agent_idx=1, lam=None, risk_budget=0.10, tail_budget=0.10, target=0.25, 
         out["solution"] = None
         return out
     z, removed, captured, wf = sol
+    out["uncertainty"] = uncertainty_sweep(agent_idx, tuple(sorted(lam.items())), r_max, l_max, base_wf)
     classes = []
     for c in range(cfg.C):
         work = cfg.CLASS_VOLUME[c] * cfg.CLASS_HANDLING[c]
