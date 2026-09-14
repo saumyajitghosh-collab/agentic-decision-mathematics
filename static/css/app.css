@@ -48,8 +48,7 @@ button, input, select { font: inherit; color: inherit; }
 .brand small { display: block; font-stretch: 100%; font-weight: 400; font-size: 13px; color: var(--ink-2); margin-top: 8px; letter-spacing: 0; line-height: 1.4; }
 .nav { display: flex; flex-direction: column; gap: 2px; }
 .nav a {
-  text-decoration: none; padding: 8px 10px;
-border-radius: var(--radius-sheet);
+  text-decoration: none; padding: 8px 10px; border-radius: var(--radius-sheet);
   color: var(--ink-2); display: block; border-left: 2px solid transparent;
 }
 .nav a:hover { color: var(--ink); background: var(--rule-soft); }
@@ -78,9 +77,9 @@ h3 { font-size: 15px; font-weight: 600; margin: 0 0 6px; }
 .section { margin-top: 34px; }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
 
-/* ---------- formula strip: every result shows the maths that produce it ---------- */
+/* ---------- formula strip: every result shows the maths that produced it ---------- */
 .eq {
-  border-left:  3px solid var(--ink);
+  border-left: 3px solid var(--ink);
   padding: 8px 14px;
   background: linear-gradient(90deg, var(--wash), rgba(220, 231, 242, 0));
   overflow-x: auto; overflow-y: hidden;
@@ -125,7 +124,7 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .slider-row input { grid-column: 1 / -1; }
 .slider-row output { font-weight: 600; }
 
-/* --------- lattice chips ---------- */
+/* ---------- lattice chips ---------- */
 .lv {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 1px 9px 1px 7px; border-radius: var(--radius-chip);

@@ -190,7 +190,7 @@
       <div class="section">
         <div class="section-head"><h2>The autonomy lattice</h2><span class="small muted">Granted level is the meet of independent caps; each cap can only lower it.</span></div>
         <div class="lattice">${levels.map((l) => `<div>${lv(l)}<p>${esc(S.cat.levels[l])}</p></div>`).join("")}</div>
-        <div style="margin-top:12px">${eq(String.raw`\mathrm{AUTOM(a)\iff \mathrm{Safet(a)\land\mathrm{Calibrated}(a)\land\mathrm{Stable}(a)\land\mathrm{Authorised}(a)`)}</div>
+        <div style="margin-top:12px">${eq(String.raw`\mathrm{AUTO(a)\iff \mathrm{Safe(a)\land\mathrm{Calibrated}(a)\land\mathrm{Stable}(a)\land\mathrm{Authorised}(a)`)}</div>
       </div>
 
       <div class="section grid g2">
@@ -450,7 +450,7 @@
         <div class="sheet"><div class="section-head"><h2>Benefit against risk, by class and action</h2>
           <div class="legend">${["AUTO", "APPROVE", "PROPOSE", "HUMAN"].map((l) => `<span><i style="background:${LEVEL_COLOR[l]}"></i>${l}</span>`).join("")}<span><i style="background:#fff;border:2px solid #15233b"></i>efficient</span></div></div>
           ${scatter(d.points, d.thresholds)}
-          ${eq(String.raw`B(a)=\mathbb{E}\big[(h_i-H_a)(1-P_{\text{fail}})\big],\qquad R(a)=\mathbb{E}\big[P_{\text{err}}\cdot \mathrm{Severity}\bi/]`, "Colour is the level most often granted to the pair across the population, after all caps.")}
+          ${eq(String.raw`B(a)=\mathbb{E}\big[(h_i-H_a)(1-P_{\text{fail}})\big],\qquad R(a)=\mathbb{E}\big[P_{\text{err}}\cdot \mathrm{Severity}\big]`, "Colour is the level most often granted to the pair across the population, after all caps.")}
         </div>
 
         <div class="grid g2">
