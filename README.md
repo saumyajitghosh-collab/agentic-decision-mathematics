@@ -198,6 +198,34 @@ This prototype implements the architecture described in *Agentic Decision Mathem
 
 MIT — see `LICENSE`.
 
+## Scope: what this artifact is, and is not
+
+**What it is evidence for.** The mechanism. Every number on every screen is
+computed live from a frozen synthetic population, so the artifact demonstrates
+that the control mathematics works end-to-end: the belief state, the feasible
+set, the three optimisation modes, conformal calibration, the autonomy
+lattice, the allocation and workforce MILPs, the runtime invariant monitor and
+the preregistered blinded benchmark all run on the same population and agree
+with each other (the test suite checks the agreements). The benchmark
+methodology — manifest hashing, blinding, Wilson intervals, paired bootstrap —
+is itself the contribution: it shows how any set of agents can be compared
+without trusting any of them.
+
+**What it is not evidence for.** Any operational claim. The population is
+synthetic; the agents are synthetic; the parameters in `engine/config.py`
+(likelihoods, harm magnitudes, capture rates, floors, volumes) are
+illustrative and unvalidated. The Savings Lab's FTE reduction is a point
+estimate inside the reported uncertainty range, not a forecast. The risk
+thresholds R1–R3 are derived from a stated appetite on the synthetic
+population (see `config.py`); they are not calibrated to any institution's
+loss data. Before any operational conclusion is drawn, every parameter must
+be replaced with institution data and the calibration replays re-run.
+
+**What would make it operational.** Real historical outcomes to calibrate the
+conformal scores per class, an institution's actual evidence feeds with
+measured reliabilities, a board-stated risk appetite to anchor R1–R3, and an
+audit process for the hash-chained decision log.
+
 ## Disclaimer
 
 All data, agents, metrics and results are synthetic and illustrative. This repository does not describe any real institution, client or system. Nothing here is investment, legal or operational advice.
