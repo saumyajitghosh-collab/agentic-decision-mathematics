@@ -199,7 +199,7 @@
           <pre class="snippet">curl -X POST $HOST/api/evaluate \\
   -H "Content-Type: application/json" \\
   -d @proposal.json</pre>
-          <p class="small muted">GET <a href="/api/evaluate">/api/evaluate</a> returns an example payload.</p>
+          <p class="small muted">On this static deployment the endpoint runs in your browser via Pyodide; a self-hosted Flask instance exposes it over the network. GET <a href="/api/evaluate">/api/evaluate</a> returns an example payload either way.</p>
         </div>
         <div class="sheet"><h2>How to read the screens</h2>
           <p class="lede">Each result sits next to the equation that produced it. Change a weight, a case or a risk budget and the engine recomputes; nothing is pre-rendered.</p>
