@@ -82,7 +82,8 @@ def handle_request(path, method, body_str):
             agent_idx(body.get("agent")),
             body.get("lambdas"),
             risk_budget=clamp_float(body.get("risk_budget"), -0.5, 1.0, 0.10),
-            target=clamp_float(body.get("target"), 0.0, 0.9, 0.25)
+            target=clamp_float(body.get("target"), 0.0, 0.9, 0.25),
+            tail_budget=clamp_float(body.get("tail_budget"), -0.5, 2.0, 0.10)
         )
 
     elif path == '/api/proof':

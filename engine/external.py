@@ -78,6 +78,7 @@ def evaluate_proposal(payload):
     ag = AGENT_INDEX[profile]
     a = cfg.ACTION_INDEX[p["action"]]
     req = LEVEL_BY_NAME[req_name]
+    authenticated = p.get("authenticated", False) is True
     changes = set(p.get("changes") or [])
     lam = cfg.normalise_lambdas(payload.get("lambdas"))
     if payload.get("mode") == "expected":
@@ -88,7 +89,7 @@ def evaluate_proposal(payload):
     J = objective(ev["comps"], lam)[0]
     feasible = ev["feasible"][0]
     a_star = int(np.where(feasible, J, np.inf).argmin())
-    d = decide(0, a, req, bool(p.get("authenticated", False)), changes, ev, g)
+    d = decide(0, a, req, authenticated, changes, ev, g)
     executed = a if d["decision"] == "ALLOW" else cfg.ESC
 
     conformal = None
@@ -116,6 +117,11 @@ def evaluate_proposal(payload):
                     for i in range(cfg.A) if not feasible[i]],
         objective={cfg.ACTIONS[i]["code"]: round(float(J[i]), 4) for i in range(cfg.A)},
         conformal=conformal, lambdas=lam,
+        calibration_identity=dict(
+            agent_id=p.get("agent_id"), profile=profile,
+            authenticated=authenticated,
+            profile_verified=False,
+            note="Calibration profile is self-declared; not server-verified"),
     )
     result["evidence_hash"] = evidence_hash(result)
     return result
