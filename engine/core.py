@@ -71,7 +71,7 @@ def evaluate(cases, belief=None):
     ET = cfg.ACT_TIME[None, :] + p_unres * cfg.FOLLOWUP_HOURS
 
     Q = cfg.EXPOSURE_GRID
-    losses = np.concatenate([base[..., None], base[..., None] + M_GRID[None, one, :] * harm[..., None]], -1)
+    losses = np.concatenate([base[..., None], base[..., None] + M_GRID[None, None, :] * harm[..., None]], -1)
     probs = np.concatenate([(1.0 - p_unres)[..., None], np.repeat((p_unres / Q)[..., None], Q, -1)], -1)
     cvar = discrete_cvar(losses, probs, cfg.TAIL_ALPHA)
 
@@ -89,7 +89,7 @@ def evaluate(cases, belief=None):
     comps = dict(C=EL / cfg.C_REF, R=R, T=ET / 24.0, H=H / 60.0, F=p_unres, J=cvar / cfg.C_REF)
     raw = dict(tail_limit=np.broadcast_to(np.maximum(cfg.TAIL_FLOOR, cfg.TAIL_BPS * cases["notional"])[:, None], (N, cfg.A)),
               expected_loss=EL, cvar=cvar, risk=R, p_err=p_err, p_fail=p_unres,
-              expected_hours=ET, human_minutes=H, severity=severity, p_in_time=pit)
+               expected_hours=ET, human_minutes=H, severity=severity, p_in_time=pit)
 
     mask = np.zeros((N, cfg.A), int)
     mask |= np.where(cfg.ACT_SSI[None, :] & ~cases["ssi_ok"][:, None], 1, 0)
