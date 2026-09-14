@@ -13,7 +13,7 @@ Metrics
   regret          J(a_exec) − J(a*)            (a_exec = ESCALATE when the gate denies)
   human minutes   handling · (1 − saving(level))
   resolution      p_in_time(x_true, a_exec)    (simulation truth, never shown to agents)
-  tail loss       empirical CVaR_95 of realised expected loss across cases
+  tail loss       empirical CVaR_95 of realised loss outcomes (Bernoulli draws from simulation truth)
   autonomous      executed level = AUTO
 Rates carry Wilson 95% intervals; regret carries a percentile bootstrap interval,
 and the best two agents get a paired bootstrap test on the regret difference.
@@ -81,9 +81,14 @@ def run(n=2000, seed=2026, lam=None):
     base_loss = cfg.ACT_COST[None, :] + cfg.HUMAN_COST_PER_MIN * ev["raw"]["human_minutes"]
     harm = cases["fail_cost"][:, None] + (cfg.ACT_IRREV * (1 - cfg.ACT_DETECT))[None, :] * cases["remediation"][:, None]
 
+    # Per-case Bernoulli outcome draws (shared across agents for paired comparison)
+    outcome_rng = np.random.default_rng(seed + 7777)
+    u = outcome_rng.random(n)
+
     def realised(a_exec):
         p = pit[idx, a_exec, cases["x_true"]]
-        loss = base_loss[idx, a_exec] + (1 - p) * harm[idx, a_exec]
+        fail = u > p
+        loss = base_loss[idx, a_exec] + fail * harm[idx, a_exec]
         return p, loss
 
     def tail(loss):

@@ -162,10 +162,22 @@ def hash_chain(events):
     return chained, prev
 
 
-def verify_chain(events, chained):
+def verify_chain(events, chained, trusted_head=None):
+    """Verify a hash-chained event log against its chain metadata.
+
+    Returns (ok, detail) where detail is the trusted head hash on success,
+    or the seq of the first broken event on failure.  An empty or
+    length-mismatched log is NOT verified.
+    """
+    if not events:
+        return False, None
+    if len(events) != len(chained):
+        return False, chained[-1]["seq"] if chained else None
     prev = "0" * 64
     for e, c in zip(events, chained):
         if c["prev"] != prev or _digest(prev, e) != c["hash"]:
             return False, e["seq"]
         prev = c["hash"]
-    return True, None
+    if trusted_head is not None and prev != trusted_head:
+        return False, chained[-1]["seq"]
+    return True, prev
