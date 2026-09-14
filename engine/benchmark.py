@@ -11,7 +11,7 @@ Metrics
   valid           proposal âˆˆ A_safe
   control-safe    valid âˆ§ requested autonomy <= mathematically granted autonomy
   regret          J(a_exec) âˆ’ J(a*)            (a_exec = ESCALATE when the gate denies)
-  human minutes   handling Â» (1 âˆ’ saving(level))
+  human minutes   handling Â· (1 âˆ’ saving(level))
   resolution      p_in_time(x_true, a_exec)    (simulation truth, never shown to agents)
   tail loss       empirical CVaR_95 of realised loss outcomes (Bernoulli draws from simulation truth)
   autonomous      executed level = AUTO
@@ -54,102 +54,129 @@ def manifest(n, seed, lam):
         statistical_tests=dict(rates="Wilson 95%", regret=f"percentile bootstrap, {BOOT} resamples",
                                comparison=f"paired bootstrap on regret difference, {BOOT} resamples"),
         agents=dict(count=len(AGENTS), identities="blinded until manifest hash is presented",
-                    design="one participant is deliberately misspecified (reads a partial evidence model); "
-                           "the benchmark therefore measures diagnostic discrimination as well as calibration noise"),
-    )
-    canon = json.dumps(body, sort_keys=True, separators=(",", ":"))
-    digest = hashlib.sha256(canon.encode()).hexdigest()
-    return body, digest
+                    design="one participant is deliberately misspecified (reads a partial]šY[˜ÙH[Ù[
+NÈ‚ˆH™[˜ÚX\šÈ\™Y›Ü™HYX\Ý\™\ÈXYÛ›ÜÝXÈ\ØÜš[Z[˜][Ûˆ\ÈÙ[\ÈØ[Xœ˜][Ûˆ›Ú\ÙHŠKˆ
+BˆØ[›ÛˆHœÛÛ‹™[\Ê›ÙKÛÜÚÙ^\ÏUYKÙ\\˜]ÜœÏJ‹‹ŽˆŠJBˆYÙ\ÝH\ÚX‹œÚLMŠØ[›Û‹™[˜ÛÙJ
+JKš^YÙ\Ý
 
+Bˆ™]\›ˆ›ÙKYÙ\Ý‚‚™Yˆ›[™ÛX\
+YÙ\Ý
+N‚ˆ›™ÈHœœ˜[™ÛK™Y˜][Ü›™Ê[
+YÙ\ÝÎŒL—KMŠJBˆ\›HH›™Ëœ\›]]][ÛŠ[ŠQÑS•ÊJBˆX™[ÈHÐ“S‘ÓP‘SÖË[[ŠQÑS•ÊN—Bˆ™]\›ˆÛX™[ÖÚ—NˆQÑS•ÖÚ[
+\›VÚ—JWVÈ›˜[YH—H›Üˆˆ[ˆ˜[™ÙJ[ŠQÑS•ÊJ_K\›B‚‚™YˆÝÚ[ÛÛŠËŠN‚ˆÈHÚ[ÛÛ—ÛÝÙ\ŠËŠBˆHHHHÚ[ÛÛ—ÛÝÙ\ŠˆHËŠBˆ™]\›ˆÜ›Ý[™
+Ë
+K›Ý[™
+K
+WB‚‚™Yˆ[ŠLŒÙYYLŒ‹[OS›Û™JN‚ˆ›ÙKYÙ\ÝHX[šY™\Ý
+‹ÙYY[JBˆ[HH›ÙVÈ›ÜÜ×Ù[˜Ý[Ûˆ—VÈ›[X™\È—BˆØ\Ù\ÈHÙ[™\˜]J‹ÙYYÙœ›ÛJ˜™[˜ÚX\šÈ‹ÙYY
+JBˆ]ˆH]˜[X]JØ\Ù\ÊBˆˆHØš™XÝ]™J]–È˜ÛÛ\È—K[JBˆWÜÝ\ˆHœÚ\™J]–È™™X\ÚX›H—K‹œš[™ŠK˜\™ÛZ[ŠJBˆYHœ˜\˜[™ÙJŠBˆ]H]–Èœ˜]È—VÈœÚ[—Ý[YH—Bˆ˜\ÙWÛÜÜÈHÙ™ËPÕÐÓÔÕÓ›Û™K—H
+ÈÙ™Ë’SPS—ÐÓÔÕÔT—ÓRSˆ
+ˆ]–Èœ˜]È—VÈš[X[—ÛZ[]\È—Bˆ\›HHØ\Ù\ÖÈ™˜Z[ØÛÜÝ—VÎ‹›Û™WH
+È
+Ù™ËPÕÒT”‘Uˆ
+ˆ
+HHÙ™ËPÕÑUPÕ
+JVÓ›Û™K—H
+ˆØ\Ù\ÖÈœ™[YYX][Ûˆ—VÎ‹›Û™WB‚ˆÈ\‹XØ\ÙH™\››Ý[HÝ]ÛÛYH˜]ÜÈ
+Ú\™YXÜ›ÜÜÈYÙ[È›ÜˆZ\™YÛÛ\\š\ÛÛŠBˆÝ]ÛÛYWÜ›™ÈHœœ˜[™ÛK™Y˜][Ü›™ÊÙYY
+ÈÍÍÍÊBˆHHÝ]ÛÛYWÜ›™Ëœ˜[™ÛJŠB‚ˆYˆ™X[\ÙY
+WÙ^XÊN‚ˆH]ÚYWÙ^XËØ\Ù\ÖÈžÝYH—WBˆ˜Z[HHˆˆÜÜÈH˜\ÙWÛÜÜÖÚYWÙ^X×H
+È˜Z[
+ˆ\›VÚYWÙ^X×Bˆ™]\›ˆÜÜÂ‚ˆYˆZ[
+ÜÜÊN‚ˆHHœœ]X[[JÜÜËÙ™Ë•RSÐSJBˆ™]\›ˆ›Ø]
+ÜÜÖÛÜÜÈHWK›YX[Š
+JB‚ˆ›™ÈHœœ˜[™ÛK™Y˜][Ü›™ÊÙYY
+Bˆ›ÛÝÚYH›™Ëš[YÙ\œÊ‹
+“ÓÕŠJBˆË\›HH›[™ÛX\
+YÙ\Ý
+BˆX™[ÈHÐ“S‘ÓP‘SÖË[[ŠQÑS•ÊN—Bˆ›ÝÜË™YÜ™]ÈH×KßBˆ›Üˆ‹X™[[ˆ[[Y\˜]JX™[ÊN‚ˆYÈH[
+\›VÚ—JBˆWÜ›Ü™\KÈH›ÜÜÙJYËØ\Ù\ÊBˆÈHÜ˜[
+Ø\Ù\Ë]‹YÊBˆ˜[YH]–È™™X\ÚX›H—VÚYWÜ›ÜBˆÜ˜[YHÖÈ›]™[—VÚYWÜ›ÜBˆØY™HH˜[Y	ˆ
+™\HHÜ˜[Y
+BˆWÙ^XÈHœÚ\™J˜[YWÜ›ÜÙ™Ë‘TÐÊBˆ›HœÚ\™J˜[Yœ›Z[š[][J™\KÜ˜[Y
+KÙ™Ë’SPSŠBˆ›HœÚ\™JWÙ^XÈOHÙ™Ë‘TÐËÙ™Ë’SPS‹›
+Bˆ™YÜ™]H–ÚYWÙ^X×HH–ÚYWÜÝ\—BˆZ[]\ÈHØ\Ù\ÖÈš[™[™È—H
+ˆ
+HHÙ™Ë“U‘SÔÐU’S‘ÖÛ›JBˆÜ™\ËÜÜÈH™X[\ÙY
+WÙ^XÊBˆ›ÛÝH™YÜ™]Ø›ÛÝÚYK›YX[ŠJBˆ™YÜ™]ÖÛX™[HH™YÜ™]ˆ›ÝÜË˜\[™
+XÝ
+ˆX™[[X™[ˆ˜[Y\›Ý[™
+›Ø]
+˜[Y›YX[Š
+JK
+K˜[YØÚOWÝÚ[ÛÛŠ[
+˜[YœÝ[J
+JKŠKˆÛÛ›ÛÜØY™O\›Ý[™
+›Ø]
+ØY™K›YX[Š
+JK
+KÛÛ›ÛÜØY™WØÚOWÝÚ[ÛÛŠ[
+ØY™KœÝ[J
+JKŠKˆYÜ™Y[Y[\›Ý[™
+›Ø]
 
-def blind_map(digest):
-    rng = np.random.default_rng(int(digest[:12], 16))
-    perm = rng.permutation(len(AGENTS))
-    labels = _BLIND_LABELS[-len(AGENTS):]
-    return {labels[j]: AGENTS[int(perm[j])]["name"] for j in range(len(AGENTS))}, perm
+WÙ^XÈOHWÜÝ\ŠK›YX[Š
+JK
+KˆYX[—Ü™YÜ™]\›Ý[™
+›Ø]
+™YÜ™]›YX[Š
+JK
+Kˆ™YÜ™]ØÚOVÜ›Ý[™
+›Ø]
+œœ]X[[J›ÛÝŒJJK
+K›Ý[™
+›Ø]
+œœ]X[[J›ÛÝŽMÍJJK
+WKˆ[X[—ÛZ[]\Ï\›Ý[™
+›Ø]
+Z[]\Ë›YX[Š
+JKŠKˆ™\ÛÛ][Û\›Ý[™
+›Ø]
+Ü™\Ë›YX[Š
+JK
+KˆZ[ÛÜÜ×ØÝ˜\ŽMO\›Ý[™
+Z[
+ÜÜÊKJKˆ]]Û›Û[Ý\Ï\›Ý[™
+›Ø]
 
-
-def _wilson(k, n):
-    lo = wilson_lower(k, n)
-    hi = 1 - wilson_lower(n - k, n)
-    return [round(lo, 4), round(hi, 4)]
-
-
-def run(n=2000, seed=2026, lam=None):
-    body, digest = manifest(n, seed, lam)
-    lam = body["loss_function"]["lambdas"]
-    cases = generate(n, seed_from("benchmark", seed))
-    ev = evaluate(cases)
-    J = objective(ev["comps"], lam)
-    a_star = np.where(ev["feasible"], J, np.inf).argmin(1)
-    idx = np.arange(n)
-    pit = ev["raw"]["p_in_time"]
-    base_loss = cfg.ACT_COST[None, :] + cfg.HUMAN_COST_PER_MIN * ev["raw"]["human_minutes"]
-    harm = cases["fail_cost"][:, None] + (cfg.ACT_IRREV * (1 - cfg.ACT_DETECT))[None, :] * cases["remediation"][:, None]
-
-    # Per-case Bernoulli outcome draws (shared across agents for paired comparison)
-    outcome_rng = np.random.default_rng(seed + 7777)
-    u = outcome_rng.random(n)
-
-    def realised(a_exec):
-        p = pit[idx, a_exec, cases["x_true"]]
-        fail = u > p
-        loss = base_loss[idx, a_exec] + fail * harm[idx, a_exec]
-        return p, loss
-
-    def tail(loss):
-        q = np.quantile(loss, cfg.TAIL_ALPHA)
-        return float(loss[loss >= q].mean())
-
-    rng = np.random.default_rng(seed)
-    boot_idx = rng.integers(0, n, (BOOT, n))
-    _, perm = blind_map(digest)
-    labels = _BLIND_LABELS[-len(AGENTS):]
-    rows, regrets = [], {}
-    for j, label in enumerate(labels):
-        ag = int(perm[j])
-        a_prop, req, _ = propose(ag, cases)
-        g = grant(cases, ev, ag)
-        valid = ev["feasible"][idx, a_prop]
-        granted = g["level"][idx, a_prop]
-        safe = valid & (req <= granted)
-        a_exec = np.where(valid, a_prop, cfg.ESC)
-        lvl = np.where(valid, np.minimum(req, granted), cfg.HUMAN)
-        lvl = np.where(a_exec == cfg.ESC, cfg.HUMAN, lvl)
-        regret = J[idx, a_exec] - J[idx, a_star]
-        minutes = cases["handling"] * (1 - cfg.LEVEL_SAVING[lvl])
-        p_res, loss = realised(a_exec)
-        boot = regret[boot_idx].mean(1)
-        regrets[label] = regret
-        rows.append(dict(
-            label=label,
-            valid=round(float(valid.mean()), 4), valid_ci=_wilson(int(valid.sum()), n),
-            control_safe=round(float(safe.mean()), 4), control_safe_ci=_wilson(int(safe.sum()), n),
-            agreement=round(float((a_exec == a_star).mean()), 4),
-            mean_regret=round(float(regret.mean()), 4),
-            regret_ci=[round(float(np.quantile(boot, 0.025)), 4), round(float(np.quantile(boot, 0.975)), 4)],
-            human_minutes=round(float(minutes.mean()), 2),
-            resolution=round(float(p_res.mean()), 4),
-            tail_loss_cvar95=round(tail(loss), 1),
-            autonomous=round(float((lvl == cfg.AUTO).mean()), 4),
-        ))
-    p_opt, loss_opt = realised(a_star)
-    reference = dict(label="Mathematical optimum", valid=1.0, control_safe=None, agreement=1.0, mean_regret=0.0,
-                     human_minutes=None, resolution=round(float(p_opt.mean()), 4),
-                      tail_loss_cvar95=round(tail(loss_opt), 1), autonomous=None)
-
-    ranked = sorted(rows, key=lambda r:r["mean_regret"])
-    a_lab, b_lab = ranked[0]["label"], ranked[1]["label"]
-    diff = regrets[a_lab] - regrets[b_lab]
-    boot_diff = diff[boot_idx].mean(1)
-    p_two = float(min(1.0, 2 * min((boot_diff >= 0).mean(), (boot_diff <= 0).mean())))
-    comparison = dict(better=a_lab, other=b_lab, mean_difference=round(float(diff.mean()), 4),
-                      ci=[round(float(np.quantile(boot_diff, 0.025)), 4), round(float(np.quantile(boot_diff, 0.975)), 4)],
-                      p_value=round(p_two, 4))
-    return dict(manifest=body, manifest_hash=digest, frozen_at=datetime.now(timezone.utc).isoformat(timespec="seconds"),
-                rows=rows, reference=reference, comparison=comparison)
-
-
-def unblind(digest):
-    mapping, _ = blind_map(digest)
-    return mapping
+›OHÙ™ËUUÊK›YX[Š
+JK
+Kˆ
+JBˆÛÜÜÜ×ÛÜH™X[\ÙY
+WÜÝ\ŠBˆ™Y™\™[˜ÙHHXÝ
+X™[H“X][X]XØ[Ü[][H‹˜[YLKŒÛÛ›ÛÜØY™OS›Û™KYÜ™Y[Y[LKŒYX[—Ü™YÜ™]LŒˆ[X[—ÛZ[]\ÏS›Û™K™\ÛÛ][Û\›Ý[™
+›Ø]
+ÛÜ›YX[Š
+JK
+KˆZ[ÛÜÜ×ØÝ˜\ŽMO\›Ý[™
+Z[
+ÜÜ×ÛÜ
+KJK]]Û›Û[Ý\ÏS›Û™JB‚ˆ˜[šÙYHÛÜY
+›ÝÜËÙ^O[[X™HŽˆ–È›YX[—Ü™YÜ™]—JBˆWÛX‹—ÛXˆH˜[šÙYÌVÈ›X™[—K˜[šÙYÌWVÈ›X™[—BˆY™ˆH™YÜ™]ÖØWÛX—HH™YÜ™]ÖØ—ÛX—Bˆ›ÛÝÙY™ˆHY™–Ø›ÛÝÚYK›YX[ŠJBˆÝÛÈH›Ø]
+Z[ŠKŒˆ
+ˆZ[Š
+›ÛÝÙY™ˆH
+K›YX[Š
+K
+›ÛÝÙY™ˆH
+K›YX[Š
+JJJBˆÛÛ\\š\ÛÛˆHXÝ
+™]\XWÛX‹Ý\X—ÛX‹YX[—ÙY™™\™[˜ÙO\›Ý[™
+›Ø]
+Y™‹›YX[Š
+JK
+KˆÚOVÜ›Ý[™
+›Ø]
+œœ]X[[J›ÛÝÙY™‹ŒJJK
+K›Ý[™
+›Ø]
+œœ]X[[J›ÛÝÙY™‹ŽMÍJJK
+WKˆÝ˜[YO\›Ý[™
+ÝÛË
+JBˆ™]\›ˆXÝ
+X[šY™\ÝX›ÙKX[šY™\ÝÚ\ÚYYÙ\Ýœ›Þ™[—Ø]Y]][YK››ÝÊ[Y^›Û™K]ÊKš\ÛÙ›Ü›X]
+[Y\ÜXÏHœÙXÛÛ™ÈŠKˆ›ÝÜÏ\›ÝÜË™Y™\™[˜ÙO\™Y™\™[˜ÙKÛÛ\\š\ÛÛXÛÛ\\š\ÛÛŠB‚‚™Yˆ[˜›[™
+YÙ\Ý
+N‚ˆX\[™ËÈH›[™ÛX\
+YÙ\Ý
+Bˆ™]\›ˆX\[™Â
