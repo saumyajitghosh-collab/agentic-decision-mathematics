@@ -6,7 +6,7 @@ A pure-maths control plane for agentic AI in securities operations. Any agent â€
 
 **No language model sits in the decision path.** Every number in the interface is computed live by the engine.
 
-> **Synthetic data only.** Exception classes, volumes, likelihoods, corts, agents and thresholds are illustrative assumptions in `engine/config.py`. Replace them with institution data before drawing any operational conclusion.
+> **Synthetic data only.** Exception classes, volumes, likelihoods, costs, agents and thresholds are illustrative assumptions in `engine/config.py`. Replace them with institution data before drawing any operational conclusion.
 
 ---
 
@@ -121,6 +121,83 @@ L = câ‚ + wÂ·Hâ‚ + (1 âˆ’ y) Â· m Â· (fail + irrevâ‚ Â· (1 âˆ’ detectâ‚) Â· 
 CVaR at 95% is computed **exactly** on a discretised loss distribution (Rockafellarâ€“Uryasev), not by Monte Carlo. Operational risk is `R(a) = P_err(a) Â· Severity(a)`, with severity weighting exposure, irreversibility, detectability, propagation and control severity.
 
 ```
-J(a) = Î»_CÂ·E[L]/C_ref + Î»_RÂ·R + Î»_TÂ·E[T]/24 + Î»_HÂ·H/60 + Î»_FÂ·P_fail + Î»_KÂ·CVaRâ‚‰â‚…/Â}É•˜)€()Ù•ÉäÑ•É´¥Ì¹½Éµ…±¥Í•Ñ¼„½µµ•¹ÍÕÉ…Ñ”Í…±”‰•™½É”İ•¥¡Ñ¥¹œ¸Q¡”İ•¥¡ÑÌƒ:ì…É”€¨©½Ù•É¹…¹”½‰©•ÑÌ¨¨°Í•Ğ‰äÍÑ…­•¡½±‘•ÉÌ°¹½Ğ‰äÑ¡”µ½‘•°ƒŠP…¹Ñ¡”A½±¥äM•¹Í¥Ñ¥Ù¥ÑäÍÉ••¸•áÁ½Í•Ì•á…Ñ±äİ¡•É”Ñ¡”½ÁÑ¥µ…°…Ñ¥½¸¡…¹•Ì…ÌÑ¡•äµ½Ù”¸((ŒŒŒ€Ì¸•…Í¥‰±”Í•Ğ()€)}Í…™”€ôì„€èœ¡à°„¤ƒŠ&€À°€ ¡à°„¤€ô€À°€ƒ>¡à°„¤€ôQIUô)€((¨€¨©œ¨¨è¹½Ñ¥½¹…°İ¥Ñ¡¥¸Ñ¡”…Ñ¥½¸Ì±¥µ¥ĞìY…HƒŠ&µ…à¡™±½½È°‰ÁÌƒ
-Ü¹½Ñ¥½¹…°¥€ìÉ¥Í¬‰•±½ÜÑ¡”‘•¹¥…°Ñ¡É•Í¡½±¸(¨€¨© ¨¨è‘•±…É•™¥•±¡…¹•ÌµÕÍĞ‰”„ÍÕ‰Í•Ğ½˜Ñ¡”…Ñ¥½¸Ì…ÕÑ¡½É¥Í•¡…¹•Ì€¡™¥•±¥¹Ù…É¥…¹”¤¸(¨€¨«>¨¨èMM$¡…¹•Ì¹••…¸…ÁÁÉ½Ù•½±‘•¸Í½ÕÉ”ìÍ•ÑÑ±•µ•¹Ğ¥¹ÍÑÉÕÑ¥½¹Ì¹••„Ù…±¥Á±…”½˜Í•ÑÑ±•µ•¹Ğì…¹•°½É•Á±…”¹••‘ÌÑ¡”½É¥¥¹…°±¥¹­•¸()M1Q€¥Ì…±İ…åÌ™•…Í¥‰±”°Í¼Ñ¡”™•…Í¥‰±”Í•Ğ¥Ì¹•Ù•È•µÁÑä¸((ŒŒŒ€Ğ¸Q¡É•”½ÁÑ¥µ¥Í…Ñ¥½¸µ½‘•Ì()€)•áÁ•Ñ•€€„¨€ô…Éµ¥¹}í}Í…™•ô}‰m)t€€€€€€€€€€€€€€€€€€€€€€£:í},€ô€À¤)Ù…È€€€€€€„¨€ô…Éµ¥¹}í}Í…™•ô}‰m)t€¬ƒ:í}/
-İY…I:Ä€€€€€€€€€€¡‘•™…Õ±Ğ¤)É½‰ÕÍĞ€€€€„¨€ô…Éµ¥¹}í…ôµ…á}íàƒŠ" Mô(¡„ğ€ ÇŠ"K:Ô¥ˆ€¬ƒ:×:Ñ}à¤€€€£:Ôµ½¹Ñ…µ¥¹…Ñ¥½¸½˜Ñ¡”‰•±¥•˜°(€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€€L€ô½¹™½Éµ…°Í•ĞƒŠ"¨íà€èˆ¡à¤ƒŠ&”€À¸ÄÁô¤)€()Q¡”É½‰ÕÍĞµ½‘”ÑÉ•…ÑÌÑ¡”½¹™½Éµ…°ÁÉ•‘¥Ñ¥½¸Í•Ğ…Ì„€©Í•Ğ¨°¹½Ğ„‘¥ÍÑÉ¥‰ÕÑ¥½¸ƒŠPÑ¡”İ½ÉÍĞ…Í”¥ÌÑ…­•¸½Ù•È¥Ğ¸((ŒŒŒ€Ô¸•¥Í¥½¸É•É•Ğ°¹½Ğ…ÕÉ…ä()€)I•É•Ğ¡„¤€ô(¡…}•á•Œ¤ƒŠ"H(¡„¨¤)€()Qİ¼…•¹ÑÌ…¸‰½Ñ ‰”€‰½ÉÉ•Ğˆ…¹ÍÑ¥±°‘¥™™•È•¹½Éµ½ÕÍ±ä¥¸½Á•É…Ñ¥¹œ½ÕÑ½µ”¸I•É•Ğµ•…ÍÕÉ•Ì‘¥ÍÑ…¹”™É½´Ñ¡”µ…Ñ¡•µ…Ñ¥…°½ÁÑ¥µÕ´…¹¥ÌÑ¡”ÁÉ¥µ…Éä‰•¹¡µ…É¬µ•ÑÉ¥ŒƒŠP½µÁÕÑ•Õ¹‘•ÈÑ¡”™É½é•¸°½Ù•É¹…¹”µ…ÁÁÉ½Ù•İ•¥¡ĞÙ•Ñ½È¸((ŒŒŒ€Ø¸ÕÑ½¹½µä¥Ì•…É¹•°¹½ĞÉ…¹Ñ•()ÕÑ½¹½µä¥ÌÑ¡”µ••Ğ½˜¥¹‘•Á•¹‘•¹Ğ…ÁÌƒŠP±…ÍÌ•¥±¥¹œ°…±¥‰É…Ñ¥½¸ÅÕ…±¥Ñä°‘É¥™ĞÍÑ…‰¥±¥Ñä°…•¹Ğµ…¹‘…Ñ”°ÕÑ½™˜ÁÉ•ÍÍÕÉ”ƒŠP…¹UQ=€…‘‘¥Ñ¥½¹…±±äÉ•ÅÕ¥É•ÌÑ¡”½¹™½Éµ…°…±¥‰É…Ñ¥½¸É•¥ÍÑÉäÑ¼½¹™¥É´ÍÕ™™¥¥•¹Ğ•Ù¥‘•¹”™½ÈÑ¡”±…ÍÌè()€)UQ<¡„¤ƒŠPM…™”¡„¤ƒŠ"œ…±¥‰É…Ñ•¡„¤ƒŠ"œMÑ…‰±”¡„¤ƒŠ"œÕÑ¡½É¥Í•¡„¤)€()Q¡”…±¥‰É…Ñ¥½¸I•¥ÍÑÉä¥Ì•áÁ±¥¥Ğ…‰½ÕĞÑ¡”½¹™½Éµ…°Õ…É…¹Ñ•”èÕ¹‘•È•á¡…¹•…‰¥±¥Ñä°™¥¹¥Ñ”µÍ…µÁ±”½Ù•É…”¡½±‘ÌÉ•…É‘±•ÍÌ½˜…±¥‰É…Ñ¥½¸µÍ•ĞÍ¥é”ì„Íµ…±°Í…µÁ±”‘•É…‘•Ì€©•™™¥¥•¹ä¨€¡½…ÉÍ•ÈÍ•ÑÌ¤°İ¡¥±”½Ù•É…”¥Ì•¹Õ¥¹•±äÑ¡É•…Ñ•¹•½¹±ä‰ä‘¥ÍÑÉ¥‰ÕÑ¥½¸Í¡¥™Ğ¸±…ÍÍ•ÌÑ¡…Ğ‘É¥™Ğ…É”…ÑÑ•¹Õ…Ñ•…ÕÑ½µ…Ñ¥…±±ä€¡]…ÍÍ•ÉÍÑ•¥¸°-0…¹UMU4µ½¹¥Ñ½ÉÌ¤¸((ŒŒŒ€Ü¸ÕÑ½¹½µä…Ì…¸…±±½…Ñ¥½¸ÁÉ½‰±•´()Q¡”M…Ù¥¹Ì1…ˆÍ½±Ù•Ì„5%1@Ñ¡…Ğ…±±½…Ñ•Ì…ÕÑ½¹½µä•¥±¥¹Ì…É½ÍÌ•á•ÁÑ¥½¸±…ÍÍ•ÌÑ¼µ…á¥µ¥Í”…Á…¥ÑäÉ•±•…Í•ÍÕ‰©•ĞÑ¼•áÁ•Ñ•µ±½ÍÌ…¹Ñ…¥°µ±½ÍÌ‰Õ‘•ÑÌ°Ñ¡•¸„Í•½¹5%1@Ñ¡…Ğ½¹Ù•ÉÑÌÉ•Í¥‘Õ…°µ¥¹ÕÑ•Ì¥¹Ñ¼ÍÕÍÑ…¥¹…‰±”¡•…‘½Õ¹ĞÕ¹‘•ÈÍ­¥±°™±½½ÉÌ°É•¥½¸½¹ÍÑÉ…¥¹ÑÌ…¹½¹ÑÉ½°µ½Ù•É…”µ¥¹¥µ„¸Q¡”½ÕÑÁÕĞ‘•½µÁ½Í•ÌÑ¡”…À‰•Ñİ••¸€©µ¥¹ÕÑ•ÌÉ•µ½Ù•¨…¹€©Á•½Á±”É•±•…Í•¨¥¹Ñ¼™É…µ•¹Ñ…Ñ¥½¸…¹ÍÑ…™™¥¹œÉ¥¥‘¥ÑäƒŠPÑ¡”µ…Ñ¡•µ…Ñ¥…°É•…Í½¸…¸…ÕÑ½µ…Ñ¥½¸Ñ…É•Ğ¥Ì¹½Ğ„¡•…‘½Õ¹ĞÑ…É•Ğ¸((ŒŒŒ€à¸IÕ¹Ñ¥µ”Ù•É¥™¥…Ñ¥½¸½˜™½Éµ…°¥¹Ù…É¥…¹ÑÌ()Qİ•±Ù”Á…ÍĞµÑ¥µ”1Q0¥¹Ù…É¥…¹ÑÌ€¡£>¥€İ¥Ñ =¹•€½!¥ÍÑ½É¥…±±å€½Á•É…Ñ½ÉÌ¤…É”µ½¹¥Ñ½É•½¸•Ù•ÉäÁÉ½Á½Í…°ÑÉ…”¥¸‰½Ñ Í¡…‘½Ü…¹•¹™½É¥¹œµ½‘•Ì¸Ù•Éä•á•ÕÑ••Ù•¹Ğ•¹Ñ•ÉÌ„M!´ÈÔØ¡…Í ¡…¥¸ìÑ…µÁ•É¥¹œ¥Ì‘•Ñ•Ñ•…¹±½…±¥Í•¸Q¡”µ½¹¥Ñ½È¥Ì¥¹‘•Á•¹‘•¹Ğ½˜Ñ¡”…Ñ”ƒŠPÑ¡•¥È…É••µ•¹Ğ¥Ì¥ÑÍ•±˜Ñ•ÍÑ•¸((ŒŒ•Á±½åµ•¹Ğ()‰…Í (ŒI•¹‘•È€¡É•¹‘•È¹å…µ°¥¹±Õ‘•¤½È…¹ä]M$¡½ÍĞè)Õ¹¥½É¸…ÁÀé…ÁÀ)€((ŒŒQ•ÍÑÌ()‰…Í )ÁåÑ•ÍĞ€µÄ)€()AÉ½Á•ÉÑäÑ•ÍÑÌ½Ù•Èè‰•±¥•˜…±¥‰É…Ñ¥½¸°•á…ĞY…H……¥¹ÍĞ„‰ÉÕÑ”µ™½É”É•™•É•¹”°™•…Í¥‰±”µÍ•Ğ¥¹Ù…É¥…¹ÑÌ€¡M1Q…±İ…åÌ™•…Í¥‰±”¤°…ÕÑ½¹½µäµ½¹½Ñ½¹¥¥Ñä°…Ñ”½¥¹Ù…É¥…¹Ğ…É••µ•¹Ğ°¡…Í µ¡…¥¸Ñ…µÁ•È‘•Ñ•Ñ¥½¸°‰•¹¡µ…É¬‰±¥¹‘¥¹œ‘•Ñ•Éµ¥¹¥Í´°…¹Í…Ù¥¹Ìµ5%1@½¹ÍÑÉ…¥¹ĞÍ…Ñ¥Í™…Ñ¥½¸¸((ŒŒI•±…Ñ¥½¸Ñ¼ÁÉ¥½Èİ½É¬()Q¡¥ÌÁÉ½Ñ½ÑåÁ”¥µÁ±•µ•¹ÑÌÑ¡”…É¡¥Ñ•ÑÕÉ”‘•ÍÉ¥‰•¥¸€©•¹Ñ¥Œ•¥Í¥½¸5…Ñ¡•µ…Ñ¥ÌèI¥Í¬µ½¹ÍÑÉ…¥¹•±±½…Ñ¥½¸½˜=Á•É…Ñ¥½¹…°ÕÑ½¹½µäU¹‘•ÈU¹•ÉÑ…¥¹Ñä¥¸¥¹…¹¥…°5…É­•Ğ%¹™É…ÍÑÉÕÑÕÉ”¨€¡¡½Í °€ÈÀÈØ°İ½É­¥¹œÁ…Á•È¤ƒŠP‰•±¥•˜µÍÑ…Ñ”½¹ÑÉ½°É…Ñ¡•ÈÑ¡…¸…•¹Ğµ½İ¹•ÍÑ…Ñ”°Ñ¡”Ñ¡É•”µİ…äÕ¹•ÉÑ…¥¹Ñä‘•½µÁ½Í¥Ñ¥½¸€¡ÍÑ…Ñ”€¼µ½‘•°€¼½ÕÑ½µ”¤°Y…H…ÌÑ¡”İ½ÉÍĞ€ ÇŠ"K:Ä¤Ñ…¥°°½¹™½Éµ…°ÁÉ•‘¥Ñ¥½¸İ¥Ñ Ñ¡”•™™¥¥•¹äµÙ•ÉÍÕÌµ½Ù•É…”‘¥ÍÑ¥¹Ñ¥½¸°ÉÕ¹Ñ¥µ”Ù•É¥™¥…Ñ¥½¸½˜„ÍÁ•¥™¥•¥¹Ù…É¥…¹ĞÍÕ‰Í•Ğ°…¹…ÕÑ½¹½µä…Ì„É¥Í¬µ½¹ÍÑÉ…¥¹•É•Í½ÕÉ”Ñ¼‰”½ÁÑ¥µ…±±ä…±±½…Ñ•É…Ñ¡•ÈÑ¡…¸„Á•Éµ¥ÍÍ¥½¸‘•Ù•±½Á•ÉÌÉ…¹Ğ¸((ŒŒ1¥•¹”()5%PƒŠPÍ•”1%9M€¸((ŒŒ¥Í±…¥µ•È()±°‘…Ñ„°…•¹ÑÌ°µ•ÑÉ¥Ì…¹É•ÍÕ±ÑÌ…É”Íå¹Ñ¡•Ñ¥Œ…¹¥±±ÕÍÑÉ…Ñ¥Ù”¸Q¡¥ÌÉ•Á½Í¥Ñ½Éä‘½•Ì¹½Ğ‘•ÍÉ¥‰”…¹äÉ•…°¥¹ÍÑ¥ÑÕÑ¥½¸°±¥•¹Ğ½ÈÍåÍÑ•´¸9½Ñ¡¥¹œ¡•É”¥Ì¥¹Ù•ÍÑµ•¹Ğ°±•…°½È½Á•É…Ñ¥½¹…°…‘Ù¥”¸(
+J(a) = Î»_CÂ·E[L]/C_ref + Î»_RÂ·R + Î»_TÂ·E[T]/24 + Î»_HÂ·H/60 + Î»_FÂ·P_fail + Î»_KÂ·CVaRâ‚‰â‚…/C_ref
+```
+
+Every term is normalised to a commensurate scale before weighting. The weights Î» are **governance objects**, set by stakeholders, not by the model â€” and the Policy Sensitivity screen exposes exactly where the optimal action changes as they move.
+
+### 3. Feasible set
+
+```
+A_safe = { a : g(x, a) â‰¤ 0,  h(x, a) = 0,  Ï†(x, a) = TRUE }
+```
+
+* **g**: notional within the action's limit; `CVaR â‰¤ max(floor, bps Â· notional)`; risk below the denial threshold.
+* **h**: declared field changes must be a subset of the action's authorised changes (field invariance).
+* **Ï†**: SSI changes need an approved golden source; settlement instructions need a valid place of settlement; cancel/replace needs the original linked.
+
+`ESCALATE` is always feasible, so the feasible set is never empty.
+
+### 4. Three optimisation modes
+
+```
+expected   a* = argmin_{A_safe} E_b[J]                      (Î»_K = 0)
+cvar       a* = argmin_{A_safe} E_b[J] + Î»_KÂ·CVaR_Î±          (default)
+robust     a* = argmin_{a} max_{x âˆˆ S} J(a | (1âˆ’Îµ)b + ÎµÎ´_x)   (Îµ-contamination of the belief,
+                                                              S = conformal set âˆª {x : b(x) â‰¥ 0.10})
+```
+
+The robust mode treats the conformal prediction set as a *set*, not a distribution â€” the worst case is taken over it.
+
+### 5. Decision regret, not accuracy
+
+```
+Regret(a) = J(a_exec) âˆ’ J(a*)
+```
+
+Two agents can both be "correct" and still differ enormously in operating outcome. Regret measures distance from the mathematical optimum and is the primary benchmark metric â€” computed under the frozen, governance-approved weight vector.
+
+### 6. Autonomy is earned, not granted
+
+Autonomy is the meet of independent caps â€” class ceiling, calibration quality, drift stability, agent mandate, cutoff pressure â€” and `AUTO` additionally requires the conformal calibration registry to confirm sufficient evidence for the class:
+
+```
+AUTO(a) â‡” Safe(a) âˆ§ Calibrated(a) âˆ§ Stable(a) âˆ§ Authorised(a)
+```
+
+The Calibration Registry is explicit about the conformal guarantee: under exchangeability, finite-sample coverage holds regardless of calibration-set size; a small sample degrades *efficiency* (coarser sets), while coverage is genuinely threatened only by distribution shift. Classes that drift are attenuated automatically (Wasserstein, KL and CUSUM monitors).
+
+### 7. Autonomy as an allocation problem
+
+The Savings Lab solves a MILP that allocates autonomy ceilings across exception classes to maximise capacity released subject to expected-loss and tail-loss budgets, then a second MILP that converts residual minutes into sustainable headcount under skill floors, region constraints and control-coverage minima. The output decomposes the gap between *minutes removed* and *people released* into fragmentation and staffing rigidity â€” the mathematical reason an automation target is not a headcount target.
+
+### 8. Runtime verification of formal invariants
+
+Twelve past-time LTL invariants (`G(Ï†)` with `Once`/`Historically` operators) are monitored on every proposal trace in both shadow and enforcing modes. Every executed event enters a SHA-256 hash chain; tampering is detected and localised. The monitor is independent of the gate â€” their agreement is itself tested.
+
+## Deployment
+
+```bash
+# Render (render.yaml included) or any WSGI host:
+gunicorn app:app
+```
+
+## Tests
+
+```bash
+pytest -q
+```
+
+Property tests cover: belief calibration, exact CVaR against a brute-force reference, feasible-set invariants (ESCALATE always feasible), autonomy monotonicity, gate/invariant agreement, hash-chain tamper detection, benchmark blinding determinism, and savings-MILP constraint satisfaction.
+
+## Relation to prior work
+
+This prototype implements the architecture described in *Agentic Decision Mathematics: Risk-Constrained Allocation of Operational Autonomy Under Uncertainty in Financial Market Infrastructure* (Ghosh, 2026, working paper) â€” belief-state control rather than agent-owned state, the three-way uncertainty decomposition (state / model / outcome), CVaR as the worst (1âˆ’Î±) tail, conformal prediction with the efficiency-versus-coverage distinction, runtime verification of a specified invariant subset, and autonomy as a risk-constrained resource to be optimally allocated rather than a permission developers grant.
+
+## Licence
+
+MIT â€” see `LICENSE`.
+
+## Disclaimer
+
+All data, agents, metrics and results are synthetic and illustrative. This repository does not describe any real institution, client or system. Nothing here is investment, legal or operational advice.

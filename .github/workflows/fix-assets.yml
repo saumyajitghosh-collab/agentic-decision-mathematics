@@ -1,0 +1,37 @@
+name: fix-assets
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix app.js
+        run: |
+          python3 -c "
+          t = open('static/js/app.js').read()
+          t = t.replace('AUTOM(a)', 'AUTO(a)')
+          t = t.replace('Safet(a)', 'Safe(a)')
+          t = t.replace('bi/]', 'big]')
+          open('static/js/app.js', 'w').write(t)
+          "
+      - name: Fix app.css
+        run: |
+          python3 -c "
+          t = open('static/css/app.css').read()
+          t = t.replace('produce it', 'produced it')
+          t = t.replace('border-left:  3px', 'border-left: 3px')
+          t = t.replace('/* --------- lattice', '/* ---------- lattice')
+          open('static/css/app.css', 'w').write(t)
+          "
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && echo "no changes" && exit 0
+          git commit -m "Fix corrupted static assets (app.js, app.css)"
+          git push
