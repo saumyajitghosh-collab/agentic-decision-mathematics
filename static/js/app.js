@@ -6,7 +6,7 @@
   // ---------------------------------------------------------------- helpers
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;" }[c]));
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const pct = (v, d = 1) => (v == null ? "â€”" : `${(v * 100).toFixed(d)}%`);
   const num = (v, d = 2) => (v == null ? "â€”" : Number(v).toLocaleString("en-GB", { minimumFractionDigits: d, maximumFractionDigits: d }));
   const eur = (v) => (v == null ? "â€”" : `â‚¬${Math.round(v).toLocaleString("en-GB")}`);
@@ -162,7 +162,7 @@
       ["Agent", "Interpretation", String.raw`\hat p(x),\;\Gamma_\alpha(x)`, "frontier", true],
       ["Control layer", "Feasible set", String.raw`A_{\text{safe}}=\{a: g\le 0,\,h=0,\,\varphi\}`, "arena"],
       ["Control layer", "Optimiser", String.raw`a^*=\arg\min_{A_{\text{safe}}} J`, "sensitivity"],
-      ["Control layer", "Autonomy", String.raw`\ell=\bigwedge_k \mathrm{cap_k`, "frontier"],
+      ["Control layer", "Autonomy", String.raw`\ell=\bigwedge_k \mathrm{cap}_k`, "frontier"],
       ["Control layer", "Gate", String.raw`\mathbf{G}(\mathit{Exec}\to\varphi)`, "proof"],
       ["Systems", "Execution", String.raw`H_t=\mathrm{h}(H_{t-1}\Vert e_t)`, "proof"],
     ];
@@ -332,7 +332,7 @@
             <div>
               <p style="margin:0 0 6px">${esc(d.optimum.name)}. ${d.optimum.binding.length ? `Autonomy is held at ${esc(d.optimum.level)} by: ${d.optimum.binding.map((b) => `<span class="tag">${esc(b)}</span>`).join("")}` : d.optimum.level === "AUTO" ? "Every cap admits autonomous execution." : ""}</p>
               <p class="small muted" style="margin:0 0 8px">Expected: <b>${d.by_mode.expected}</b> Â· Tail-aware: <b>${d.by_mode.cvar}</b> Â· Robust: <b>${d.by_mode.robust}</b>.
-                Calibration for this class at Î±=${num(d.calibration.alpha, 4)}: ${esc(d.calibration.reason)}. Drift: ${d.drift.stable ? "stable" : `material (Wâ‚ ${d.drift.w1}, KL ${d.drift.kl}${d.drift.cusum_alarm ? ", CUSUM alarm" : "")}`}.</p>
+                Calibration for this class at Î±=${num(d.calibration.alpha, 4)}: ${esc(d.calibration.reason)}. Drift: ${d.drift.stable ? "stable" : `material (Wâ‚ ${d.drift.w1}, KL ${d.drift.kl}${d.drift.cusum_alarm ? ", CUSUM alarm" : ""})`}.</p>
               ${eq(modeTex)}
               ${eq(String.raw`\mathrm{Regret}(a)=J(a_{\text{exec}})-J(a^*),\qquad a_{\text{exec}}=\begin{cases}a & \text{gate allows}\\ \text{ESCALATE} & \text{gate denies}\end{cases}`)}
             </div>
@@ -459,7 +459,7 @@
           </div>
           <div class="sheet"><h3>Lattice rule</h3>
             ${eq(String.raw`\ell(a)=\min\{\mathrm{cap}_{\text{score}},\mathrm{cap}_{\text{risk}},\mathrm{cap}_{\text{calib}},\mathrm{cap}_{\text{drift}},\mathrm{cap}_{\text{mandate}},\mathrm{cap}_{\text{policy}}\}`)}
-            ${eq(String.raw`\mathrm{Score}(a)=\mathrm{Benefit}-2.0\,R-0.55\,\mathrm{Irrev}-0.60\,U)}}
+            ${eq(String.raw`\mathrm{Score}(a)=\mathrm{Benefit}-2.0\,R-0.55\,\mathrm{Irrev}-0.60\,U`)}
             ${eq(String.raw`\alpha(a)=0.05\,(1-0.9\,\mathrm{irrev}_a)\;\Rightarrow\; n_{\text{cal}}\ge \lceil 1/\alpha(a)\rceil-1`, "The less reversible the action, the more calibration evidence autonomy requires.")}
           </div>
         </div>
@@ -647,7 +647,7 @@
             ${skills.map((sk) => `<tr><td>${esc(sk)}</td>${regions.map((rg) => { const c = cell(sk, rg); return `<td class="num">${c.baseline} â†’ <b>${c.optimised}</b>${c.optimised === c.floor ? ` <span class="tag">floor</span>` : ""}</td>`; }).join("")}<td class="num">${cell(sk, regions[0]).floor}</td></tr>`).join("")}
             <tr><td>Flexible pool</td>${s.flex.regions.map((_, i) => `<td class="num">${s.flex.baseline[i]} â†’ <b>${s.flex.optimised[i]}</b></td>`).join("")}<td></td></tr>
           </tbody></table></div>
-          ${eq(String.raw`\min\sum_{j,t}HC_{jt}+1.1\sum_t F_t\quad\text{s.t.}\quad 420\,HC_{jt}+0.8\,y_{jt}\ge 1.25\,W_{jt},\;\;\sum_j y_{jt}\le 420\,F_t,\;\; HC_{jt}\ge \underline{HC}_j,\;\; HC,F\in\mathbb{Z}_+a)}
+          ${eq(String.raw`\min\sum_{j,t}HC_{jt}+1.1\sum_t F_t\quad\text{s.t.}\quad 420\,HC_{jt}+0.8\,y_{jt}\ge 1.25\,W_{jt},\;\;\sum_j y_{jt}\le 420\,F_t,\;\; HC_{jt}\ge \underline{HC}_j,\;\; HC,F\in\mathbb{Z}_+`)}
         </div>
       </div>`;
   }
@@ -695,7 +695,7 @@
               <td style="min-width:150px"><div style="display:flex;gap:8px;align-items:center"><div class="bar" style="flex:1"><i style="width:${(i.shadow / maxV) * 100}%;background:var(--deny)"></i></div><span class="num" data-tip="${i.examples.map((e) => `${esc(e.key)} Â· ${esc(e.action)} Â· agent ${esc(e.agent)}`).join("<br>") || "none"}">${i.shadow}</span></div></td>
               <td class="num"><b>${i.enforcing}</b></td></tr>`).join("")}
           </tbody></table></div>
-          ${eq(String.raw`\mathbf{O}\,\psi \text{ at } i \iff \exists j\le i:\psi \text{ at } j,\qquad \mathbf{G}\,\varphi \iff \forall i:\varphi \text{ at } ig, "Past-time LTL evaluated over each proposal's finite event trace.")}
+          ${eq(String.raw`\mathbf{O}\,\psi \text{ at } i \iff \exists j\le i:\psi \text{ at } j,\qquad \mathbf{G}\,\varphi \iff \forall i:\varphi \text{ at } i`, "Past-time LTL evaluated over each proposal's finite event trace.")}
         </div>
 
         <div class="grid g2">
@@ -728,7 +728,26 @@
     overview: [viewOverview, null],
     arena: [viewArena, wireArena],
     frontier: [viewFrontier, wireFrontier],
-    sensitivity: [viewSensitivity, wireSensitivityt°(€€€Í…Ù¥¹ÌèmÙ¥•İM…Ù¥¹Ì°İ¥É•M…Ù¥¹Ít°(€€€ÁÉ½½˜èmÙ¥•İAÉ½½˜°İ¥É•AÉ½½™t°(€ôì((€™Õ¹Ñ¥½¸É½ÕÑ” ¤ì(€€€½¹ÍĞ¹…µ”€ô€¡±½…Ñ¥½¸¹¡…Í ñğ€ˆ½Ù•ÉÙ¥•Üˆ¤¹Í±¥” Ä¤ì(€€€½¹ÍĞ­•ä€ôMI9Mm¹…µ•t€ü¹…µ”€è€‰½Ù•ÉÙ¥•Üˆì(€€€€ ˆ¹¹…Ø„ˆ¤¹™½É…  ¡„¤€ôø„¹Í•ÑÑÑÉ¥‰ÕÑ” ‰…É¥„µÕÉÉ•¹Ğˆ°„¹‘…Ñ…Í•Ğ¹ÍÉ••¸€ôôô­•ä€ü€‰Á…”ˆ€è€‰™…±Í”ˆ¤¤ì(€€€½¹ÍĞµ…¥¸€ô€ ˆµ…¥¸ˆ¤ì(€€€½¹ÍĞmÙ¥•Ü°İ¥É•t€ôMI9Mm­•åtì(€€€µ…¥¸¹¥¹¹•É!Q50€ôÙ¥•Ü ¤ì(€€€É•¹‘•É5…Ñ ¡µ…¥¸¤ì(€€€¥˜€¡İ¥É”¤İ¥É”¡µ…¥¸¤ì(€€€İ¥¹‘½Ü¹ÍÉ½±±Q¼ À°€À¤ì(€ô((€…Íå¹Œ™Õ¹Ñ¥½¸‰½½Ğ ¤ì(€€€½¹ÍĞµ…¥¸€ô€ ˆµ…¥¸ˆ¤ì(€€€µ…¥¸¹¥¹¹•É!Q50€ô€ñ‘¥Ø±…ÍÌô‰±½…‘¥¹œˆù1½…‘¥¹œ…Ñ…±½Õ•â€¦</div>`;
+    sensitivity: [viewSensitivity, wireSensitivity],
+    savings: [viewSavings, wireSavings],
+    proof: [viewProof, wireProof],
+  };
+
+  function route() {
+    const name = (location.hash || "#overview").slice(1);
+    const key = SCREENS[name] ? name : "overview";
+    $$(".nav a").forEach((a) => a.setAttribute("aria-current", a.dataset.screen === key ? "page" : "false"));
+    const main = $("#main");
+    const [view, wire] = SCREENS[key];
+    main.innerHTML = view();
+    renderMath(main);
+    if (wire) wire(main);
+    window.scrollTo(0, 0);
+  }
+
+  async function boot() {
+    const main = $("#main");
+    main.innerHTML = `<div class="loading">Loading catalogueâ€¦</div>`;
     try {
       S.cat = await api("/api/catalogue");
       S.lambdas = { ...S.cat.default_lambdas };
