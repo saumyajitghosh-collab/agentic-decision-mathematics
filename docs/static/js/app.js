@@ -213,7 +213,7 @@
   function viewArena() {
     return `
       <header class="screen-head"><h1>Decision Arena</h1>
-        <p>Three agents read the same operational state. The engine computes the belief, the feasible set and the optimum, then scores each proposal by regret and decides what the gate allows.</p></header>
+        <p>Synthetic agents read the same operational state. The engine computes the belief, the feasible set and the optimum, then scores each proposal by regret and decides what the gate allows.</p></header>
       <div class="grid g-side">
         <div class="stack">
           <div class="sheet"><h3>Case</h3>
@@ -365,7 +365,8 @@
       <div class="stack">
         <div class="sheet"><div class="grid g2">
           <div><h3>Manifest</h3>
-            <p class="small muted" style="margin:0">${m.population.cases} cases, seed ${m.population.seed}, ${m.population.class_mix}; ${m.exception_classes.length} exception classes; ${m.permitted_evidence.length} evidence signals; ${m.control_invariants.length} invariants; calibration by ${m.calibration.method}; rates with ${m.statistical_tests.rates}; regret by ${m.statistical_tests.regret}.</p></div>
+            <p class="small muted" style="margin:0">${m.population.cases} cases, seed ${m.population.seed}, ${m.population.class_mix}; ${m.exception_classes.length} exception classes; ${m.permitted_evidence.length} evidence signals; ${m.control_invariants.length} invariants; calibration by ${m.calibration.method}; rates with ${m.statistical_tests.rates}; regret by ${m.statistical_tests.regret}.</p>
+            <p class="small muted" style="margin:4px 0 0">${m.agents.count} participants. ${esc(m.agents.design || "")}</p></div>
           <div><h3>SHA-256</h3><div class="hash">${esc(r.manifest_hash)}</div><div class="small faint">Frozen ${esc(r.frozen_at)}</div></div>
         </div></div>
         <div class="sheet"><div class="table-wrap"><table><thead><tr><th>Agent</th><th class="num">Valid</th><th class="num">Control-safe</th><th class="num">Matches optimum</th><th class="num">Mean regret</th><th class="num">Human min/case</th><th class="num">Resolution</th><th class="num">Tail loss CVaR₉₅</th><th class="num">Autonomous</th></tr></thead><tbody>
@@ -461,6 +462,7 @@
             ${eq(String.raw`\ell(a)=\min\{\mathrm{cap}_{\text{score}},\mathrm{cap}_{\text{risk}},\mathrm{cap}_{\text{calib}},\mathrm{cap}_{\text{drift}},\mathrm{cap}_{\text{mandate}},\mathrm{cap}_{\text{policy}}\}`)}
             ${eq(String.raw`\mathrm{Score}(a)=\mathrm{Benefit}-2.0\,R-0.55\,\mathrm{Irrev}-0.60\,U`)}
             ${eq(String.raw`\alpha(a)=0.05\,(1-0.9\,\mathrm{irrev}_a)\;\Rightarrow\; n_{\text{cal}}\ge \lceil 1/\alpha(a)\rceil-1`, "The less reversible the action, the more calibration evidence autonomy requires.")}
+            ${d.thresholds.provenance ? `<div class="callout" style="margin-top:12px"><p class="small muted" style="margin:0">Risk thresholds R1=${num(d.thresholds.r1, 3)}, R2=${num(d.thresholds.r2, 3)}, R3=${num(d.thresholds.r3, 3)} are derived from a stated tolerable annual loss of €${(d.thresholds.provenance.tolerable_annual_loss / 1000).toFixed(0)}k over ${d.thresholds.provenance.trading_days} trading days (€${(d.thresholds.provenance.daily_risk_budget / 1000).toFixed(1)}k daily budget). <a href="https://github.com/saumyajitghosh-collab/agentic-decision-mathematics/blob/main/engine/config.py" target="_blank">See the derivation in config.py</a>.</p></div>` : ""}
           </div>
         </div>
 
@@ -649,7 +651,26 @@
           </tbody></table></div>
           ${eq(String.raw`\min\sum_{j,t}HC_{jt}+1.1\sum_t F_t\quad\text{s.t.}\quad 420\,HC_{jt}+0.8\,y_{jt}\ge 1.25\,W_{jt},\;\;\sum_j y_{jt}\le 420\,F_t,\;\; HC_{jt}\ge \underline{HC}_j,\;\; HC,F\in\mathbb{Z}_+`)}
         </div>
+        ${d.uncertainty ? uncertaintyHtml(d.uncertainty) : ""}
       </div>`;
+  }
+
+  function uncertaintyHtml(u) {
+    if (!u) return "";
+    const fmt = (v) => pct(v, 1);
+    return `
+        <div class="sheet"><h3>Uncertainty sweep · what the FTE reduction depends on</h3>
+          <p class="lede">The headline FTE reduction is a point estimate inside this range. The two drivers below are the dominant uncertainties.</p>
+          <div class="kpis">
+            <div class="kpi"><div class="v">${fmt(u.fte_reduction_min)}</div><div class="k">FTE reduction · low</div></div>
+            <div class="kpi"><div class="v">${fmt(u.fte_reduction_median)}</div><div class="k">FTE reduction · median</div></div>
+            <div class="kpi"><div class="v">${fmt(u.fte_reduction_max)}</div><div class="k">FTE reduction · high</div></div>
+          </div>
+          <div class="table-wrap"><table><thead><tr><th class="num">${esc(u.drivers[0])}</th><th class="num">${esc(u.drivers[1])}</th><th class="num">FTE reduction</th></tr></thead><tbody>
+            ${u.rows.map((r) => `<tr><td class="num">${r.capture_scale}</td><td class="num">${r.floor_scale}</td><td class="num">${fmt(r.fte_reduction)}</td></tr>`).join("")}
+          </tbody></table></div>
+          <p class="small muted">${esc(u.note)}</p>
+        </div>`;
   }
 
   // ---------------------------------------------------------------- proof
