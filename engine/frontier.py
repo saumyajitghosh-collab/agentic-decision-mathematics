@@ -57,7 +57,11 @@ def frontier(agent_idx=1, n=3000):
     _, _, _, _, _, mix = class_tables(agent_idx, lam_key)
     class_mix = [dict(code=cfg.CLASSES[c]["code"], name=cfg.CLASSES[c]["name"],
                       mix={cfg.LEVEL_NAMES[i]: round(float(mix[c, i]), 3) for i in range(4)}) for c in range(cfg.C)]
-    return dict(agent=AGENTS[agent_idx]["name"], points=points, thresholds=dict(r1=cfg.R1, r2=cfg.R2, r3=cfg.R3),
+    return dict(agent=AGENTS[agent_idx]["name"], points=points,
+                thresholds=dict(r1=cfg.R1, r2=cfg.R2, r3=cfg.R3,
+                                provenance=dict(tolerable_annual_loss=cfg.TOLERABLE_ANNUAL_LOSS,
+                                                trading_days=cfg.TRADING_DAYS,
+                                                daily_risk_budget=round(cfg.DAILY_RISK_BUDGET, 0))),
                 registry=registry(agent_idx), drift=drift_report(agent_idx), class_mix=class_mix,
                 drift_thresholds=dict(w=cfg.W_EPS, kl=cfg.KL_EPS, baseline_days=cfg.DRIFT_BASELINE_DAYS,
                                       days=cfg.DRIFT_DAYS))
@@ -75,5 +79,8 @@ def catalogue():
         levels=cfg.LEVEL_HELP, lambdas=cfg.LAMBDA_LABELS, default_lambdas=cfg.DEFAULT_LAMBDAS, presets=cfg.PRESETS,
         caps=[dict(code=c, text=CAP_TEXT[c]) for c in CAP_NAMES],
         invariants=[dict(code=c, tex=t, text=x) for c, t, x, _ in INVARIANTS],
-        thresholds=dict(r1=cfg.R1, r2=cfg.R2, r3=cfg.R3, alpha_base=cfg.ALPHA_BASE),
+        thresholds=dict(r1=cfg.R1, r2=cfg.R2, r3=cfg.R3, alpha_base=cfg.ALPHA_BASE,
+                        provenance=dict(tolerable_annual_loss=cfg.TOLERABLE_ANNUAL_LOSS,
+                                        trading_days=cfg.TRADING_DAYS,
+                                        daily_risk_budget=round(cfg.DAILY_RISK_BUDGET, 0))),
     )
